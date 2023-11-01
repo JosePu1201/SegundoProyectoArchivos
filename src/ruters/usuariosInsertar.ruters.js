@@ -9,4 +9,5 @@ ruter.post('/agregarUsuario',controladorUsuario.agregarUsuario);
 ruter.get('/obtenerUsurio', controladorUsuario.obtenerUsuario);
 
 
+
 module.exports = ruter;

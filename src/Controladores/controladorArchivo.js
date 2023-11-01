@@ -15,7 +15,9 @@ const agregarArchivo = async (req, res) => {
 };
 
 const obtenerArchivo = async(req,res) => {
-    res.json();
+
+    const busqueda = await archivo.find();
+    res.json(busqueda);
 }
 
 module.exports = {
