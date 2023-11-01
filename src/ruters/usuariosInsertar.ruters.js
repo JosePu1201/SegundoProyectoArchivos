@@ -8,6 +8,7 @@ ruter.post('/agregarUsuario',controladorUsuario.agregarUsuario);
 //obtener un usuario
 ruter.get('/obtenerUsurio', controladorUsuario.obtenerUsuario);
 
+ruter.put('/actualizarContra',controladorUsuario.actualizarUsaurio);
 
 
 module.exports = ruter;
