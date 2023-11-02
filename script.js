@@ -35,3 +35,23 @@ db.archivos.insertOne({
     creacion: "2023-10-10",
     modificacion: "2023-10-11"
 });
+db.archivos.insertOne({
+    nombre: "nuevoArchivoPrueba",
+    autor: "usuario1"
+    extension: "txt",
+    contenido: "Esto es el nuevo contenido de mi archivo txt",
+    enPapelera: false,
+    pathPadre: "/raiz",
+    creacion: "2023-10-10",
+    modificacion: "2023-10-11"
+});
+db.archivos.insertOne({
+    nombre: "H",
+    autor: "usuario1"
+    extension: "html",
+    contenido: "Esto es el nuevo contenido de mi archivo txt",
+    enPapelera: false,
+    pathPadre: "/raiz",
+    creacion: "2023-10-10",
+    modificacion: "2023-10-11"
+});

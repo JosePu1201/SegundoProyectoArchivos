@@ -5,6 +5,7 @@ const model = mongoose.model;
 
 const archivoSchema = new mongoose.Schema({
     nombre: String,
+    autor: String,
     extension: String,
     contenido: String,
     enPapelera: Boolean,

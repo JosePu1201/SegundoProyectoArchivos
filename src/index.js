@@ -4,6 +4,8 @@ const app = express();
 //ruters api
 const usuarioRuter = require('./ruters/usuariosInsertar.ruters');
 const archivoRuter = require('./ruters/archivo.ruter');
+const directorioRuter = require('./ruters/directorio.ruter');
+
 //uso de json
 app.use(express.json());
 app.use(express.urlencoded({extended : false}));
@@ -14,6 +16,7 @@ app.get('/',(req,res) =>{
 })
 app.use('/api',usuarioRuter);
 app.use('/api',archivoRuter);
+app.use('/api',directorioRuter);
 //Inicio del servidor 
 const server = app.listen(port,() =>{
     console.log(`Servidor escuchando en el puerto ${port}`);
