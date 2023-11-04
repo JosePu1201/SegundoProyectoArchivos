@@ -23,15 +23,20 @@ const agregarUsuario = async (req, res) => {
 
 
 //obtiene a un usuario
-let nombre = "usuario1";
 const obtenerUsuario = async (req, res) => {
-    const usaurioEncontrado = await usuario.findOne({ 'usuario': req.body.usuario });
-    if (usaurioEncontrado) {
-        res.json(usaurioEncontrado);
+    const user = req.query.usuario;
+    const pass = req.query.contra;
+    console.log(user);
+    console.log(pass);
+    const usuarioEncontrado = await usuario.findOne({ 'usuario': user, 'Contra': pass });
+
+    if (usuarioEncontrado) {
+        res.json(usuarioEncontrado);
     } else {
-        res.status(404).json({ message: 'Usuario no encontrado' });
+        res.status(404).json({ message: 'Usuario no encontrado xDs' });
     }
 }
+
 
 const actualizarUsaurio = async (req,res) => {
     try {
