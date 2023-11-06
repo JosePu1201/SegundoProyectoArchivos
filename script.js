@@ -6,15 +6,19 @@ db.createCollection('archivos')
 db.createCollection('directorios')
 
 db.usuarios.insertOne({
-    usuario: 'usuario1',
-    contra: '1234',
-    role: 'empleado'
+    usuario: 'user',
+    Contra: '1234',
+    rol: 'Empleado'
 });
-
+db.usuarios.insertOne({
+    usuario: 'user1',
+    Contra: '1234',
+    rol: 'Empleado'
+});
 db.usuarios.insertOne({
     usuario: 'usuario2',
-    contra: '1234',
-    role: 'admin'
+    Contra: '1234',
+    rol: 'Admin'
 });
 
 db.directorios.insertOne({
