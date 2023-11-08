@@ -22,7 +22,8 @@ const obtenerArchivo = async(req,res) => {
 //obtiene todos los archivos que tienen el mismo path y autor ademas solo los que no estan
 //en papelera
 const obtenerArchivosPorPathYAutor = async (req, res) => {
-    const { pathPadre, autor } = req.body;
+    const pathPadre = req.query.path;
+    const autor = req.query.autor;
 
     try {
         const archivosEncontrados = await archivo.find({

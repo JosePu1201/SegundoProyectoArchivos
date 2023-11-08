@@ -38,23 +38,23 @@ const obtenerUsuario = async (req, res) => {
 }
 
 
-const actualizarUsaurio = async (req,res) => {
+const actualizarUsaurio = async (req, res) => {
     try {
-        const filter = { usuario: req.body.nombre}; // Filtro para encontrar el usuario
+        const filter = { usuario: req.body.nombre }; // Filtro para encontrar el usuario
         const update = { Contra: req.body.nuevaContra }; // Datos a actualizar
 
         const resultado = await usuario.updateOne(filter, update);
 
-        if (resultado.nModified > 0) {
-            console.log('Contraseña actualizada con éxito');
+        if (resultado.nModified === 0) {
+            console.log('El usuario no fue encontrado o la contraseña ya está actualizada');
             res.json(resultado);
         } else {
-            console.log('El usuario "usuario1" no fue encontrado o la contraseña ya está actualizada');
+            console.log('Contraseña actualizada con éxito');
             res.json(resultado);
         }
     } catch (error) {
         console.error('Error al actualizar la contraseña:', error);
-        res.json();
+        res.status(500).json({ message: 'Error al actualizar la contraseña' });
     }
 };
 

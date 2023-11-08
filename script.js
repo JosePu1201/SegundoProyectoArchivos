@@ -26,36 +26,42 @@ db.directorios.insertOne({
     path: "/raiz",
     pathPadre: null,
     enPapelera: false,
-    autor: "Usuario1",
-    FechaDeCreacion: Date,
+    autor: "user",
+    FechaDeCreacion: new Date('2023-10-25')
 });
-
-db.archivos.insertOne({
-    nombre: "nuevoArchivo",
-    extension: "txt",
-    contenido: "Esto es el nuevo contenido de mi archivo txt",
+db.directorios.insertOne({
+    nombre: "compartido",
+    path: "/campartido",
+    pathPadre: null,
     enPapelera: false,
+    autor: "user",
+    FechaDeCreacion: new Date('2023-10-25')
+});
+db.directorios.insertOne({
+    nombre: "nuevo",
+    path: "/raiz/nuevo",
     pathPadre: "/raiz",
-    creacion: "2023-10-10",
-    modificacion: "2023-10-11"
+    enPapelera: false,
+    autor: "user",
+    FechaDeCreacion: new Date('2023-10-27')
 });
 db.archivos.insertOne({
     nombre: "nuevoArchivoPrueba",
-    autor: "usuario1"
+    autor: "user",
     extension: "txt",
     contenido: "Esto es el nuevo contenido de mi archivo txt",
     enPapelera: false,
     pathPadre: "/raiz",
-    creacion: "2023-10-10",
-    modificacion: "2023-10-11"
+    creacion: new Date('2023-10-26'),
+    modificacion: new Date ('2023-10-26T12:00:00.000Z')
 });
 db.archivos.insertOne({
     nombre: "H",
-    autor: "usuario1"
+    autor: "user",
     extension: "html",
-    contenido: "Esto es el nuevo contenido de mi archivo txt",
+    contenido: "Esto es el nuevo contenido de mi archivo html",
     enPapelera: false,
     pathPadre: "/raiz",
-    creacion: "2023-10-10",
-    modificacion: "2023-10-11"
+    creacion: new Date('2023-10-28'),
+    modificacion: new Date ('2023-10-29T12:00:00.000Z')
 });

@@ -9,5 +9,5 @@ ruter.post('/agregarDirectorio',controladorDirectorio.agregarDirectorio);
 //consurltar directroio por path y autor
 
 ruter.get('/consultaDirectorioPathAutor',controladorDirectorio.obtenerDirectorioPorPathAutor);
-
+ruter.get('/consultanombreAutor',controladorDirectorio.obtenerPathPorNombre);
 module.exports = ruter;

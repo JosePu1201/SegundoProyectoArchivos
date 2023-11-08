@@ -39,8 +39,8 @@
 <body>
     <div>
         <label for="text">nombre del usuario</label>
-        <button type="submit" id="nuevaCarpeta">Nueva carpeta</button>
-        <button type="submit" id="nuevohtml">Nuevo archivo html </button>
+        <button type="submit" id="nuevaCarpeta" onclick="mostrarCarpetas()">Nueva carpeta</button>
+        <button type="submit" id="nuevohtml" onclick="limpiarTabla()">Nuevo archivo html </button>
         <button type="submit" id="nuevotxt">Nuevo archivo txt</button>
         <button type="submit" id="actualizar">Cambiar contraseña</button>
         <button type="submit" id="cerrar" onclick="accionCerrar()">Cerrar sesión</button>
@@ -52,38 +52,44 @@
                 <label for="fileName">Nombre del Archivo:</label>
                 <input type="text" id="fileName" name="fileName"><br><br>
                 <label for="fileContent">Contenido:</label><br>
-                <textarea id="fileContent" name="fileContent" rows="4" cols="50"></textarea><br><br>
-                <button type="submit">Agregar</button>
+                <textarea id="fileContent" name="fileContent" rows="15" cols="50"></textarea><br><br>
+                <button type="submit">Crear archivo</button>
                 <button type="button" onclick="closeModal()">Cancelar</button>
             </form>
         </div>
     </div>
 
-    <div id="modal" class="modal" >
+    <div id="newP" class="modal" >
         <div class="modal-content">
             <span class="close">&times;</span>
             <form id="passwordForm">
-                <label for="newPassword">Nueva contraseña:</label>
+                <label for="newPassword">Nueva contraseña:    </label>
                 <input type="password" id="newPassword" name="newPassword">
+                <br>
+                <label for="confirmPassword">Confirmar contraseña: </label>
+                <input type="password" id="confirmPassword"name="confirmPassword">
+                <br>
                 <input type="submit" value="Cambiar contraseña">
             </form>
         </div>
     </div>
     <div>
-        <label for="text">path</label>
-        <button>Anterior</button>
+        <label for="text" id="path"></label>
+        <button onclick="RegresarVista">Anterior</button>
     </div>
     <div>
         <table>
             <thead>
                 <tr>
-                    <th>Encabezado 1</th>
-                    <th>Encabezado 2</th>
-                    <th>Acciones</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Autor</th>
+                    <th>Fecha de crecion</th>
+                    <th>Fecha de modificacion</th>
                 </tr>
             </thead>
             <tbody id="cuerpoTabla">
-                <!-- Aquí se generará el contenido dinámico -->
+                
             </tbody>
         </table>
     </div>

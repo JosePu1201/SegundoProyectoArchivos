@@ -1,6 +1,6 @@
 const directorio = require('../Modelos/directorio');
 
-const agregarDirectorio = async(req,res) => {
+const agregarDirectorio = async (req, res) => {
     const insertarDirectorio = new directorio({
         nombre: req.body.nombre,
         path: req.body.path,
@@ -13,18 +13,31 @@ const agregarDirectorio = async(req,res) => {
     res.json(confirmacion);
 };
 
-const obtenerDirectorio = async(req,res) => {
+const obtenerDirectorio = async (req, res) => {
     res.json();
 }
 const obtenerDirectorioPorPathAutor = async (req, res) => {
-    const { pathPadre, autor } = req.body;
+    const pathPadre = req.query.path;
+    const autor = req.query.autor;
+    console.log('entra aca', pathPadre);
+    console.log('entra aca', autor);
 
     try {
-        const directorioEncontrados = await directorio.find({
-            pathPadre: pathPadre,
-            autor: autor,
-            enPapelera: false
-        });
+        let directorioEncontrados;
+
+        if (pathPadre === 'null') {
+            directorioEncontrados = await directorio.find({
+                pathPadre: { $in: [null, ''] },
+                autor: autor,
+                enPapelera: false
+            });
+        } else {
+            directorioEncontrados = await directorio.find({
+                pathPadre: pathPadre,
+                autor: autor,
+                enPapelera: false
+            });
+        }
 
         res.json(directorioEncontrados);
     } catch (error) {
@@ -32,9 +45,32 @@ const obtenerDirectorioPorPathAutor = async (req, res) => {
         res.status(500).json({ message: 'Error al buscar la carpeta' });
     }
 };
+const obtenerPathPorNombre = async (req, res) => {
+    const nombreCarpeta = req.query.nombreCarpeta;
+    const autor = req.query.autor;
+   
+    try {
+        let directorioEncontrados;
+        directorioEncontrados = await directorio.findOne({
+            nombre: nombreCarpeta,
+            autor: autor,
+            enPapelera: false
+        });
+
+        res.json(directorioEncontrados);
+       
+    } catch (error) {
+        console.error('Error al buscar la carpeta:', error);
+        res.status(500).json({ message: 'Error al buscar la carpeta' });
+    }
+};
+
+
+
 
 module.exports = {
     agregarDirectorio,
     obtenerDirectorio,
-    obtenerDirectorioPorPathAutor
+    obtenerDirectorioPorPathAutor,
+    obtenerPathPorNombre
 }
