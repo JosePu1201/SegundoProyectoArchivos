@@ -24,7 +24,7 @@ const obtenerArchivo = async(req,res) => {
 const obtenerArchivosPorPathYAutor = async (req, res) => {
     const pathPadre = req.query.path;
     const autor = req.query.autor;
-
+    console.log('entra hasta aca');
     try {
         const archivosEncontrados = await archivo.find({
             pathPadre: pathPadre,

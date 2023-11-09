@@ -52,7 +52,7 @@ document.getElementById("txtForm").addEventListener("submit", function (event) {
     event.preventDefault();
     const fileName = document.getElementById("fileName").value;
     const fileContent = document.getElementById("fileContent").value;
-    if(path === null){
+    if(path === null || path === '/campartido'){
         alert("En  esta carpeta no se pueden crear archivos");
 
     }else{
@@ -74,37 +74,95 @@ function validarTipo(tipo,nombreCarpeta){
     }
 }
 //agrega filas a una tabla
-async function agregarFila(nombre, autor, fecha, tipo,Modificacion) {
+async function agregarFila(nombre, tipo, fecha, fechaMod) {
     const tbody = document.getElementById('cuerpoTabla');
     const fila = document.createElement('tr');
 
-    const celdaBoton = document.createElement('td');
+    const celdaBotonNombre = document.createElement('td');
     const boton = document.createElement('button');
     boton.textContent = nombre;
     boton.id = nombre; // Asignar el nombre como id al botón
     boton.onclick = function () {
        validarTipo(tipo,nombre);
     };
-    celdaBoton.appendChild(boton);
+    celdaBotonNombre.appendChild(boton);
 
     const celda1 = document.createElement('td');
-    celda1.textContent = autor;
+    celda1.textContent = tipo;
+    //Aun falta para cambiar cuando sean carpetas
+    if(tipo === "Carpeta"){
+        const celda2 = document.createElement('td');
+        celda2.textContent = "    ";
+        //boton para copiar
+        const celdaBotonCopiar = document.createElement('td');
+        const botonCopia = document.createElement('button');
+        botonCopia.textContent = "Copiar";
+        botonCopia.onclick = function(){
+            console.log('Copiaras:  ',nombre);
+        };
+        celdaBotonCopiar.appendChild(botonCopia);
+        //boton para mover
+        const celdaBotonMover = document.createElement('td');
+        const botonMover = document.createElement('button');
+        botonMover.textContent = "Mover";
+        botonMover.onclick = function(){
+            console.log('Moveras:  ',nombre);
+        };
+        celdaBotonMover.appendChild(botonMover);
+        //boton para elimiar
+        const celdaBotonEliminar = document.createElement('td');
+        const botonElimina = document.createElement('button');
+        botonElimina.textContent = "Eliminar";
+        botonElimina.onclick = function(){
+            console.log('Eliminaras:  ',nombre);
+        };
+        celdaBotonEliminar.appendChild(botonElimina);
+        //Espacio para compartir 
+        const compartir = document.createElement('td');
+        compartir.textContent = "";
+        //fecha de creacion
+        const fechaCrear = document.createElement('td');
+        fechaCrear.textContent = fecha;
 
-    const celda2 = document.createElement('td');
-    celda2.textContent = fecha;
+        const fechaModi = document.createElement('td');
+        fechaModi.textContent = fechaMod;
 
-    const celda3 = document.createElement('td');
-    celda3.textContent = tipo;
+        fila.appendChild(celdaBotonNombre);
+        fila.appendChild(celda1);
+        fila.appendChild(celda2);
+        fila.appendChild(celdaBotonCopiar);
+        fila.appendChild(celdaBotonMover);
+        fila.appendChild(celdaBotonEliminar);
+        fila.appendChild(compartir);
+        fila.appendChild(fechaCrear);
+        fila.appendChild(fechaModi);
 
-    const celda4 = document.createElement('td');
-    celda4.textContent = Modificacion;
+    }else{
 
-    fila.appendChild(celdaBoton);
-    fila.appendChild(celda3);
-    fila.appendChild(celda1);
-    fila.appendChild(celda2);
+    }
+   
+
+    
+ 
 
     tbody.appendChild(fila);
+}
+function RegresarVista(){
+    if(path === null){
+
+    }else if(path === "/raiz"){
+        path = null;
+    }else if(path === "/campartido"){
+        console.log('entra a esta funcion segun el path',path);
+        path = null;
+    }else{
+        let nuevo = path.lastIndexOf('/');
+        if(nuevo !== -1){
+            const antesDiagonal = path.substring(0,nuevo);
+            path = antesDiagonal;
+        }
+    }
+    mostrarCarpetas();
 }
 function accionCerrar() {
     localStorage.removeItem('token')
@@ -118,6 +176,13 @@ async function limpiarTabla() {
 async function mostrarCarpetas() {
     limpiarTabla();
     obtenerCarpetas();
+    if(path === null){
+
+    }else{
+        console.log('asdassadas');
+        obtenerArchivos();
+    }
+    
 }
 function resetforms(){
     document.getElementById("newP").style.display = "none";
@@ -174,27 +239,40 @@ async function obtenerPathCarpeta(nombreCarpeta){
 }
 
 async function obtenerArchivos() {
-    const url = `http://localhost:4000/api/consultaArchivosPathAutor?autor=${nombre}&path=${path}`;
+    const url2 = `http://localhost:4000/api/consultaArchivoPathAutor?autor=${nombre}&path=${path}`;
     try {
-        const response = await fetch(url);
+        const response = await fetch(url2);
         if (!response.ok) {
 
         }
         const data = await response.json();
-
-        await procesarInfo(data);
+        console.log(data);
+        //procesarInfoArchivo(data);
+    
     } catch (error) {
-
+        console.log('Ocurrio un erro')
     }
+}
+function procesarInfoArchivo(data) {
+    limpiarTabla();
+    console.log(data);
+    data.forEach(objeto => {
+        let nombre = objeto.nombre;
+        let Fecha = new Date(objeto.FechaDeCreacion);
+        let tipo = "Carpeta"
+        agregarFila(nombre,tipo,Fecha,null);
+
+    });
 }
 function procesarInfo(data) {
     limpiarTabla();
+    console.log(data);
     data.forEach(objeto => {
         let nombre = objeto.nombre;
         let autor = objeto.autor;
-        let Fecha = Date(objeto.autor);
+        let Fecha = new Date(objeto.FechaDeCreacion);
         let tipo = "Carpeta"
-        agregarFila(nombre, autor, Fecha, tipo,'');
+        agregarFila(nombre,tipo,Fecha,null);
 
     });
 }
