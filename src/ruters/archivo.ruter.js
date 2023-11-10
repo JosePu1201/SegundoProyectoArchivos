@@ -11,4 +11,6 @@ ruter.post('/agregarArchivo',controladorArchivo.agregarArchivo);
 
 ruter.get('/consultaArchivo',controladorArchivo.obtenerArchivo);
 ruter.get('/consultaArchivoPathAutor',controladorArchivo.obtenerArchivosPorPathYAutor);
+ruter.put('/moverPapelera',controladorArchivo.moverAPapelera);
+ruter.get('/mostrarContenido',controladorArchivo.obtenerArchivoPorPathAutorNombre);
 module.exports = ruter;

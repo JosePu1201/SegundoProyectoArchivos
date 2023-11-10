@@ -34,23 +34,61 @@
             text-decoration: none;
             cursor: pointer;
         }
+        .closeN {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .closeN.close,
+        .closeN:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .cerrarMuestra {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .cerrarMuestra.close,
+        .closeN:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
     </style>
 </head>
 <body>
     <div>
         <label for="text">nombre del usuario</label>
-        <button type="submit" id="nuevaCarpeta" onclick="mostrarCarpetas()">Nueva carpeta</button>
-        <button type="submit" id="nuevohtml" onclick="limpiarTabla()">Nuevo archivo html </button>
+        <button type="submit" id="nuevaCarpeta" onclick="nuevaCarpetaView()">Nueva carpeta</button>
+        <button type="submit" id="nuevohtml" >Nuevo archivo html </button>
         <button type="submit" id="nuevotxt">Nuevo archivo txt</button>
         <button type="submit" id="actualizar">Cambiar contraseña</button>
         <button type="submit" id="cerrar" onclick="accionCerrar()">Cerrar sesión</button>
     </div>
+    <div id="formularioCarpeta" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="closeN" onclick="cerrarFormularioCarpeta()">&times;</span>
+            <form id="nuevaCarpetaForm">
+                <label for="nombreCarpeta">Nombre de la carpeta:</label>
+                <input type="text" id="nombreCarpeta" required>
+                <button type="submit">Crear</button>
+            </form>
+        </div>
+    </div>
     <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px;">
-            <h2>Nuevo Archivo TXT</h2>
+            <h2>Nuevo Archivo</h2>
             <form id="txtForm">
                 <label for="fileName">Nombre del Archivo:</label>
-                <input type="text" id="fileName" name="fileName"><br><br>
+                <input type="text" id="fileName" name="fileName">
+                <h1>.</h1>
+                <h1 id="extension"> </h1>
+                <br><br>
                 <label for="fileContent">Contenido:</label><br>
                 <textarea id="fileContent" name="fileContent" rows="15" cols="50"></textarea><br><br>
                 <button type="submit">Crear archivo</button>
@@ -58,7 +96,22 @@
             </form>
         </div>
     </div>
-
+    <div id="mostrarArchivo" class="modal" style="display: none;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px;">
+            <h1 id="MostrarInformacion"></h1>
+            <span class="cerrarMuestra">&times;</span>
+            <textarea id="muestra" cols="75" rows="30" readonly > </textarea>
+        </div>
+    </div>
+    <div id="editarArchivo" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarEditar()">&times;</span>
+            <h2 id="informacionArchivo">Información</h2>
+            <textarea id="areaEditar" rows="10" cols="50"></textarea><br><br>
+            <button onclick="cerrarEditar()">Cancelar</button>
+            <button onclick="guardarCambios()">Guardar Cambios</button>
+        </div>
+    </div>
     <div id="newP" class="modal" >
         <div class="modal-content">
             <span class="close">&times;</span>

@@ -1,21 +1,37 @@
 const archivo = require('../Modelos/archivo');
 
 const agregarArchivo = async (req, res) => {
-    const insertarArchivo = new archivo({
+    console.log('nombreCrearArchivo',req.body.nombre);
+    console.log('nombreCrearArchivo',req.body.pathPadre);
+    const existeUno = await archivo.findOne({
         nombre: req.body.nombre,
-        autor: req.body.autor,
-        extension: req.body.extension,
-        contenido: req.body.contenido,
-        enPapelera: Boolean(req.body.enPapelera),
         pathPadre: req.body.pathPadre,
-        creacion: Date(req.body.creacion),
-        modificacion: Date(req.body.modificacion)
+        autor: req.body.autor,
+        enPapelera: false
     });
-    const confirmacion = await insertarArchivo.save();
-    res.json(confirmacion);
+
+    if (existeUno) {
+        res.status(400).json({ message: 'Ya existe el archivo' });
+    }
+    else {
+        const insertarArchivo = new archivo({
+            nombre: req.body.nombre,
+            autor: req.body.autor,
+            extension: req.body.extension,
+            contenido: req.body.contenido,
+            enPapelera: Boolean(req.body.enPapelera),
+            pathPadre: req.body.pathPadre,
+            creacion: Date(req.body.creacion),
+            modificacion: Date(req.body.modificacion)
+        });
+
+        const confirmacion = await insertarArchivo.save();
+        res.json(confirmacion);
+        console.log(confirmacion);
+    }
 };
 
-const obtenerArchivo = async(req,res) => {
+const obtenerArchivo = async (req, res) => {
     const busqueda = await archivo.find();
     res.json(busqueda);
 }
@@ -38,10 +54,52 @@ const obtenerArchivosPorPathYAutor = async (req, res) => {
         res.status(500).json({ message: 'Error al buscar archivos' });
     }
 };
+//obtener archivo para mostrar contenido 
+const obtenerArchivoPorPathAutorNombre = async(req,res) => {
+    const path = req.query.path;
+    const autor = req.query.autor;
+    const nombre = req.query.nombre;
+     try{   
+        const existeArchivo = await archivo.findOne({
+            pathPadre: path,
+            autor: autor,
+            nombre: nombre
+        });
+        res.json(existeArchivo);
+     }catch(error){
+        res.status(500).json({message:"Archivo no encontrado"});
+     }
+};
+const moverAPapelera = async (req, res) => {
+    const path = req.body.path;
+    const autor = req.body.autor;
+    const nombre = req.body.nombre;
+    console.log(path, autor, ' ', nombre);
+    try {
+        const archivoMovido = await archivo.updateOne(
+            {
+                pathPadre: path,
+                autor: autor,
+                nombre: nombre
+            },
+            {
+                $set: {
+                    pathPadre: '/papelera',
+                    enPapelera: true
+                }
+            });
+        res.json(archivoMovido);
+        console.log(archivoMovido);
+    } catch (error) {
+        res.status(500).body({ mensaje: 'error al eliminar' });
+    }
 
+};
 
 module.exports = {
     agregarArchivo,
     obtenerArchivo,
-    obtenerArchivosPorPathYAutor
+    obtenerArchivosPorPathYAutor,
+    moverAPapelera, 
+    obtenerArchivoPorPathAutorNombre
 }

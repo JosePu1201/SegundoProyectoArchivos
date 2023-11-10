@@ -58,6 +58,8 @@ const actualizarUsaurio = async (req, res) => {
     }
 };
 
+
+
 module.exports = {
     agregarUsuario,
     obtenerUsuario,
