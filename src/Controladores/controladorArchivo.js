@@ -1,8 +1,8 @@
 const archivo = require('../Modelos/archivo');
 
 const agregarArchivo = async (req, res) => {
-    console.log('nombreCrearArchivo',req.body.nombre);
-    console.log('nombreCrearArchivo',req.body.pathPadre);
+    console.log('nombreCrearArchivo', req.body.nombre);
+    console.log('nombreCrearArchivo', req.body.pathPadre);
     const existeUno = await archivo.findOne({
         nombre: req.body.nombre,
         pathPadre: req.body.pathPadre,
@@ -55,26 +55,25 @@ const obtenerArchivosPorPathYAutor = async (req, res) => {
     }
 };
 //obtener archivo para mostrar contenido 
-const obtenerArchivoPorPathAutorNombre = async(req,res) => {
+const obtenerArchivoPorPathAutorNombre = async (req, res) => {
     const path = req.query.path;
     const autor = req.query.autor;
     const nombre = req.query.nombre;
-     try{   
+    try {
         const existeArchivo = await archivo.findOne({
             pathPadre: path,
             autor: autor,
             nombre: nombre
         });
         res.json(existeArchivo);
-     }catch(error){
-        res.status(500).json({message:"Archivo no encontrado"});
-     }
+    } catch (error) {
+        res.status(500).json({ message: "Archivo no encontrado" });
+    }
 };
 const moverAPapelera = async (req, res) => {
     const path = req.body.path;
     const autor = req.body.autor;
     const nombre = req.body.nombre;
-    console.log(path, autor, ' ', nombre);
     try {
         const archivoMovido = await archivo.updateOne(
             {
@@ -95,11 +94,33 @@ const moverAPapelera = async (req, res) => {
     }
 
 };
+const cambiarContenido = async (req, res) => {
+    const path = req.body.path;
+    const nombre = req.body.nombre;
+    const autor = req.body.autor;
+    const nuevoContenido = req.body.contenido;
+    try {
+        const contenidnuevo = await archivo.updateOne({
+            pathPadre: path,
+            nombre: nombre,
+            autor: autor
+        }, {
+            $set: {
+                contenido: nuevoContenido
+            }
+        });
+
+        res.json(cambiarContenido);
+    } catch (errro) {
+        res.status(500).body({ mensaje: 'error al actualizar el contenido' });
+    }
+};
 
 module.exports = {
     agregarArchivo,
     obtenerArchivo,
     obtenerArchivosPorPathYAutor,
-    moverAPapelera, 
-    obtenerArchivoPorPathAutorNombre
+    moverAPapelera,
+    obtenerArchivoPorPathAutorNombre,
+    cambiarContenido
 }

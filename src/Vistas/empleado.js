@@ -6,6 +6,16 @@ const urlGeneral = `http://localhost:4000/api`;
 let path = null;
 //llama a la configuracion inicial
 configInicial();
+//Cerrar Edicion y acciones
+function cerrarEditar() {
+    document.getElementById("editarArchivo").style.display = "none";
+}
+function guardarCambios() {
+    const nombre = document.getElementById("nombreArchivoEditar").textContent;
+    const contenido = document.getElementById("areaEditar").value;
+    cambioEdicio(nombre, contenido);
+    cerrarEditar();
+}
 //CAmbio de contrasenea
 document.getElementById("actualizar").addEventListener("click", function () {
     document.getElementById("newP").style.display = "block";
@@ -15,7 +25,7 @@ document.getElementsByClassName("close")[0].addEventListener("click", function (
     document.getElementById("newP").style.display = "none";
 });
 
-document.getElementsByClassName("cerrarMuestra")[0].addEventListener("click",function(){
+document.getElementsByClassName("cerrarMuestra")[0].addEventListener("click", function () {
     document.getElementById("mostrarArchivo").style.display = "none";
 })
 
@@ -83,7 +93,7 @@ function closeModal() {
     document.getElementById("fileContent").value = "";
 
 }
-document.getElementById("txtForm").addEventListener("submit", function (event) {
+document.getElementById("txtForm").addEventListener("submit", async function (event) {
     event.preventDefault();
     const fileName = document.getElementById("fileName").value;
     const fileContent = document.getElementById("fileContent").value;
@@ -92,35 +102,43 @@ document.getElementById("txtForm").addEventListener("submit", function (event) {
         alert("En  esta carpeta no se pueden crear archivos");
         closeModal();
     } else {
-        crearArchivo(fileName, fileContent, ext);
+        await crearArchivo(fileName, fileContent, ext);
+        await mostrarCarpetas();
     }
+
     document.getElementById("extension").value = "";
-    
+
     closeModal();//<!-- Aquí se generará el contenido dinámico -->
 });
 //funcion que configura todo al inicio
 async function configInicial() {
+    document.getElementById("NombreUsuario").textContent = nombre;
     mostrarCarpetas();
 }
-function validarTipo(tipo, nombreCarpeta) {
+async function validarTipo(tipo, nombreCarpeta) {
+
     if (tipo === "Carpeta") {
-        obtenerPathCarpeta(nombreCarpeta);
-        limpiarTabla();
+        console.log('entra aca al hacer click en carpeta');
+        const algo = await obtenerPathCarpeta(nombreCarpeta);
+        console.log('Sigue aca?', path);
         mostrarCarpetas();
+
+
     } else {
-        mostrarContenidoArchivo(nombreCarpeta);
+        mostrarContenidoArchivo(nombreCarpeta, "mostrar");
     }
 }
-function agregarFilaArchivo(nombre, tipo, fecha, fechaMod) {
+
+function agregarFilaArchivo(nombreArchivo, tipo, fecha, fechaMod) {
     const tbody = document.getElementById('cuerpoTabla');
     const fila = document.createElement('tr');
 
     const celdaBotonNombre = document.createElement('td');
     const boton = document.createElement('button');
-    boton.textContent = nombre;
-    boton.id = nombre; // Asignar el nombre como id al botón
+    boton.textContent = nombreArchivo;
+    boton.id = nombreArchivo; // Asignar el nombre como id al botón
     boton.onclick = function () {
-        validarTipo(tipo, nombre);
+        validarTipo(tipo, nombreArchivo);
     };
     celdaBotonNombre.appendChild(boton);
 
@@ -131,7 +149,7 @@ function agregarFilaArchivo(nombre, tipo, fecha, fechaMod) {
     const botonEditar = document.createElement('button');
     botonEditar.textContent = "Editar";
     botonEditar.onclick = function () {
-        console.log('Estas editando', nombre);
+        editarArchivo(nombreArchivo);
     };
     celdaBotonEditar.appendChild(botonEditar);
     //boton para copiar
@@ -147,7 +165,7 @@ function agregarFilaArchivo(nombre, tipo, fecha, fechaMod) {
     const botonMover = document.createElement('button');
     botonMover.textContent = "Mover";
     botonMover.onclick = function () {
-        console.log('Moveras:  ', nombre);
+        console.log('Moveras:  ', nombreArchivo);
     };
     celdaBotonMover.appendChild(botonMover);
     //boton para elimiar
@@ -155,7 +173,7 @@ function agregarFilaArchivo(nombre, tipo, fecha, fechaMod) {
     const botonElimina = document.createElement('button');
     botonElimina.textContent = "Eliminar";
     botonElimina.onclick = function () {
-        moverPapelera(nombre);
+        moverPapelera(nombreArchivo);
     };
     celdaBotonEliminar.appendChild(botonElimina);
     //Espacio para compartir 
@@ -253,13 +271,16 @@ function agregarFilaCarpeta(nombre, tipo, fecha, fechaMod) {
     tbody.appendChild(fila);
     localStorage.removeItem('token')
 }
+function editarArchivo(nombreArchivo) {
+    mostrarContenidoArchivo(nombreArchivo, "editar")
+}
 function RegresarVista() {
-    if (path === null) {
 
+    if (path === null) {
+        
     } else if (path === "/raiz") {
         path = null;
     } else if (path === "/campartido") {
-        console.log('entra a esta funcion segun el path', path);
         path = null;
     } else {
         let nuevo = path.lastIndexOf('/');
@@ -280,13 +301,15 @@ async function limpiarTabla() {
 }
 
 async function mostrarCarpetas() {
-
+    console.log('Esntra Aqui');
+    limpiarTabla();
     if (path === null) {
+        document.getElementById("path").textContent = "";
         obtenerCarpetas();
     } else {
-        console.log('asdassadas');
-        obtenerCarpetas();
+        document.getElementById("path").textContent = path;
         obtenerArchivos();
+        obtenerCarpetas();
     }
 
 }
@@ -360,7 +383,6 @@ async function obtenerCarpetas() {
 
         }
         const data = await response.json();
-        console.log(data);
         procesarInfo(data);
     } catch (error) {
 
@@ -388,36 +410,37 @@ async function obtenerArchivos() {
 
         }
         const data = await response.json();
-        //console.log(data);
         procesarInfo(data);
 
     } catch (error) {
         console.log('Ocurrio un erro')
     }
 }
-async function moverPapelera(nombreArchivo) {
+async function moverPapelera(nombreArchivoEliminar) {
     const url = `${urlGeneral}/moverPapelera`;
     const data = {
         path: path,
         autor: nombre,
-        nombre: nombreArchivo
+        nombre: nombreArchivoEliminar
     }
-    await fetch(url, {
+    console.log(data);
+    const res = await fetch(url, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-    })
-        .then(data => {
-            alert("Movida a papelera con exito");
-            mostrarCarpetas();
-        })
-        .catch(error => {
-            console.error('error', error);
-        })
+    });
+
+    if (!res.ok) {
+        const respuesta = res.json();
+        alert(respuesta.message);
+    } else {
+        alert(`Archivo: ${nombreArchivoEliminar} eliminado con exito`);
+    }
+    mostrarCarpetas();
 }
-async function mostrarContenidoArchivo(nombreArchivo){
+async function mostrarContenidoArchivo(nombreArchivo, accion) {
     const url2 = `${urlGeneral}/mostrarContenido?path=${path}&autor=${nombre}&nombre=${nombreArchivo}`
     try {
         const response = await fetch(url2);
@@ -425,34 +448,88 @@ async function mostrarContenidoArchivo(nombreArchivo){
 
         }
         const data = await response.json();
-        const mostrarInformacion = `Nombre del archivo: ${nombreArchivo}.${data.extension}`;
-        document.getElementById("MostrarInformacion").textContent = mostrarInformacion;
-        document.getElementById("muestra").value = data.contenido;
-        document.getElementById("mostrarArchivo").style.display = "block";
-        
-        console.log(data.contenido);
+        if (accion === "mostrar") {
+            const mostrarInformacion = `Nombre del archivo: ${nombreArchivo}.${data.extension}`;
+            document.getElementById("MostrarInformacion").textContent = mostrarInformacion;
+            document.getElementById("muestra").value = data.contenido;
+            document.getElementById("mostrarArchivo").style.display = "block";
+        }
+        if (accion === "editar") {
+            document.getElementById("nombreArchivoEditar").textContent = nombreArchivo;
+            document.getElementById("extensionArchivoEditar").textContent = '.' + data.extension;
+            document.getElementById("areaEditar").value = data.contenido;
+            document.getElementById("editarArchivo").style.display = "block";
+        }
+
+
 
     } catch (error) {
         console.log('Ocurrio un erro')
     }
 }
+async function cambioEdicio(nombreArchivo, nuevoContenido) {
+    const url = `${urlGeneral}/actualizarContenido`
+    const data = {
+        path: path,
+        nombre: nombreArchivo,
+        autor: nombre,
+        contenido: nuevoContenido
+    }
+    const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) {
+        const respuesta = res.json();
+        alert(respuesta.message);
+    } else {
+        alert(`Archivo: ${nombreArchivo} actualizado con exito`);
+    }
+
+}
 function procesarInfo(data) {
-    limpiarTabla();
+
     console.log(data);
     data.forEach(objeto => {
         if (objeto.extension) {
             console.log('Archivo');
             let nombre = objeto.nombre;
             let Fecha = new Date(objeto.creacion);
-            let modifiacion = new Date(objeto.modifiacion);
+            let opcionesFechaNuev = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            let opcionesHoraNuev = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+
+            let fechaEspa1 = Fecha.toLocaleDateString('es-ES', opcionesFechaNuev);
+            let horaEn24FormatoNuev = Fecha.toLocaleTimeString('es-ES', opcionesHoraNuev);
+
+            let fechaCrear = `Fecha: ${fechaEspa1}, Hora: ${horaEn24FormatoNuev}`;
+
+            let modificacion = new Date(objeto.modificacion);
+            let opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            let opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+
+            let fechaEnEspanol = modificacion.toLocaleDateString('es-ES', opcionesFecha);
+            let horaEn24Formato = modificacion.toLocaleTimeString('es-ES', opcionesHora);
+
+            let fechaModificacion = `Fecha: ${fechaEnEspanol}, Hora: ${horaEn24Formato}`;
+
             let tipo = objeto.extension;
-            agregarFilaArchivo(nombre, tipo, Fecha, modifiacion);
+            agregarFilaArchivo(nombre, tipo, fechaCrear, fechaModificacion);
         } else {
             console.log('Carpeta');
             let nombre = objeto.nombre;
             let Fecha = new Date(objeto.FechaDeCreacion);
+            let opcionesFechaNuev = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            let opcionesHoraNuev = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+
+            let fechaEspa1 = Fecha.toLocaleDateString('es-ES', opcionesFechaNuev);
+            let horaEn24FormatoNuev = Fecha.toLocaleTimeString('es-ES', opcionesHoraNuev);
+
+            let fechaCrear = `Fecha: ${fechaEspa1}, Hora: ${horaEn24FormatoNuev}`;
             let tipo = "Carpeta";
-            agregarFilaCarpeta(nombre, tipo, Fecha, null);
+            agregarFilaCarpeta(nombre, tipo, fechaCrear, null);
         }
     });
 }

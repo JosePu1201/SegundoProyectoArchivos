@@ -1,0 +1,140 @@
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url('https://previews.123rf.com/images/belyaevskiy/belyaevskiy1708/belyaevskiy170800021/84651837-viejo-tablero-de-madera-pintado-de-blanco-fondo-claro-o-textura-para-su-dise%C3%B1o.jpg');
+
+}
+#botonesPrincipales {
+    text-align: right;
+}
+
+/* Agregar un espacio entre los botones */
+#botonesPrincipales > button {
+    margin-right: 10px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close,
+.closeN,
+.cerrarMuestra {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus,
+.closeN:hover,
+.closeN:focus,
+.cerrarMuestra:hover,
+.cerrarMuestra:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Agregar estilos para los botones */
+button {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: #9f694b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #7372cf;
+}
+
+/* Agregar estilos para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    font-weight: normal; /* Reiniciar el peso de la fuente */
+}
+
+th {
+    background-color: #340c01;
+    color: rgb(255, 247, 247);
+    text-align: center;
+    font-weight: bolder;
+}
+
+/* Establecer el texto en negrita para las celdas de la tabla */
+td {
+    font-weight: bold;
+}
+/* Estilo para el botón de cerrar sesión */
+#cerrar {
+    background-color: rgb(130, 2, 2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px; /* Agregamos bordes redondeados */
+}
+
+/* Estilo para el botón de regresar con forma de flecha azul */
+#regresarLaVista {
+    background-color: rgb(131, 131, 163);
+    color: rgb(16, 15, 15);
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px; /* Agregamos bordes redondeados */
+    display: flex; /* Hacemos que los elementos internos se alineen en fila */
+    align-items: left; /* Alineamos verticalmente los elementos internos */
+}
+
+/* Estilo para la imagen dentro del botón */
+#regresarLaVista img {
+    width: 20px; /* Ajusta el ancho según tus necesidades */
+    height: auto; /* Hace que la altura se ajuste proporcionalmente al ancho */
+    margin-right: 8px; /* Espacio entre la imagen y el texto */
+    border-radius: 50%; /* Añade bordes redondeados a la imagen */
+}
+#titulo {
+    text-align: center;
+    font-size: 2em; /* Puedes ajustar el tamaño según tu preferencia */
+    font-family: 'Tu Tipo de Letra', sans-serif; /* Reemplaza 'Tu Tipo de Letra' con la fuente que desees */
+    color: #070707; /* Cambia el color del texto según tu preferencia */
+}
+#NombreUsuario {
+    text-align: left;
+    font-size: 2em;
+    font-family: 'Tu Tipo de Letra', sans-serif;
+    font-weight: bold; /* Hace que el texto sea negrita */
+    color: rgb(94, 4, 4) 7, 7);
+    margin-left: 15px; /* Mueve el texto a la derecha */
+}
