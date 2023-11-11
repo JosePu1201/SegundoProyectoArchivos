@@ -1,7 +1,15 @@
 const directorio = require('../Modelos/directorio');
 
 const agregarDirectorio = async (req, res) => {
-    const insertarDirectorio = new directorio({
+    const existeUno = await directorio.findOne({
+        nombre: req.body.nombre,
+        path: req.body.path,
+        enPapelera: false
+    });
+    if(existeUno){
+        res.status(400).json({message: "La carpeta ya"});
+    }else{
+        const insertarDirectorio = new directorio({
         nombre: req.body.nombre,
         path: req.body.path,
         pathPadre: req.body.pathPadre,
@@ -11,6 +19,8 @@ const agregarDirectorio = async (req, res) => {
     });
     const confirmacion = await insertarDirectorio.save();
     res.json(confirmacion);
+    }
+
 };
 
 const obtenerDirectorio = async (req, res) => {
@@ -48,7 +58,7 @@ const obtenerDirectorioPorPathAutor = async (req, res) => {
 const obtenerPathPorNombre = async (req, res) => {
     const nombreCarpeta = req.query.nombreCarpeta;
     const autor = req.query.autor;
-   
+
     try {
         let directorioEncontrados;
         directorioEncontrados = await directorio.findOne({
@@ -58,7 +68,7 @@ const obtenerPathPorNombre = async (req, res) => {
         });
 
         res.json(directorioEncontrados);
-       
+
     } catch (error) {
         console.error('Error al buscar la carpeta:', error);
         res.status(500).json({ message: 'Error al buscar la carpeta' });

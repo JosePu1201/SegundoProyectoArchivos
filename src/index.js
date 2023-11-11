@@ -6,6 +6,7 @@ const cors = require('cors');
 const usuarioRuter = require('./ruters/usuariosInsertar.ruters');
 const archivoRuter = require('./ruters/archivo.ruter');
 const directorioRuter = require('./ruters/directorio.ruter');
+const compartidoRuter = require('./ruters/compartido.ruter');
 
 //uso de json
 app.use(express.json());
@@ -19,6 +20,7 @@ app.get('/',(req,res) =>{
 app.use('/api',usuarioRuter);
 app.use('/api',archivoRuter);
 app.use('/api',directorioRuter);
+app.use('/api',compartidoRuter);
 //Inicio del servidor 
 const server = app.listen(port,() =>{
     console.log(`Servidor escuchando en el puerto ${port}`);

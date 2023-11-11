@@ -53,8 +53,36 @@ document.getElementById("passwordForm").addEventListener("submit", function (eve
     document.getElementById("confirmPassword").value = "";
     localStorage.removeItem('token')
 });
+function validarTexto(texto) {
+    const caracteresEspeciales = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
+    if (texto && typeof texto === 'string' && texto.trim() !== '') {
+        if (!caracteresEspeciales.test(texto)) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+function agregarCarpeta(event) {
+    event.preventDefault();
+    const nombreCarpeta = document.getElementById('nombreCarpeta').value;
+    console.log(nombreCarpeta);
+    if (validarTexto(nombreCarpeta)) {
+        nuevaCarpeta(nombreCarpeta);
+    } else {
+        alert("El nombre no es valida\nNo debe de tener caracteres especiales ni tener espacios vacios");
+    }
+}
+
 function nuevaCarpetaView() {
-    document.getElementById("formularioCarpeta").style.display = "block";
+    if (path !== null && path !== '/compartido') {
+        document.getElementById("formularioCarpeta").style.display = "block";
+    } else {
+        alert("No puedes crear una carpeta en este directorio");
+    }
+
 }
 
 function cerrarFormularioCarpeta() {
@@ -86,19 +114,20 @@ document.getElementById("nuevotxt").addEventListener("click", function (event) {
     document.getElementById("extension").value = "txt"
     document.getElementById("modal").style.display = "block";
 });
-
+//cierra la vista de crear archivo
 function closeModal() {
     document.getElementById("modal").style.display = "none";
     document.getElementById("fileName").value = "";
     document.getElementById("fileContent").value = "";
 
 }
+//Agrega un nuevo archivo
 document.getElementById("txtForm").addEventListener("submit", async function (event) {
     event.preventDefault();
     const fileName = document.getElementById("fileName").value;
     const fileContent = document.getElementById("fileContent").value;
     const ext = document.getElementById("extension").value;
-    if (path === null || path === '/campartido') {
+    if (path === null || path === '/compartido') {
         alert("En  esta carpeta no se pueden crear archivos");
         closeModal();
     } else {
@@ -108,22 +137,19 @@ document.getElementById("txtForm").addEventListener("submit", async function (ev
 
     document.getElementById("extension").value = "";
 
-    closeModal();//<!-- Aquí se generará el contenido dinámico -->
+    closeModal();
 });
 //funcion que configura todo al inicio
 async function configInicial() {
-    document.getElementById("NombreUsuario").textContent = nombre;
+    document.getElementById("NombreUsuario").textContent = `Empleado: ${nombre}`;
     mostrarCarpetas();
 }
+//valida que tipo para decidir accion
 async function validarTipo(tipo, nombreCarpeta) {
 
     if (tipo === "Carpeta") {
-        console.log('entra aca al hacer click en carpeta');
         const algo = await obtenerPathCarpeta(nombreCarpeta);
-        console.log('Sigue aca?', path);
         mostrarCarpetas();
-
-
     } else {
         mostrarContenidoArchivo(nombreCarpeta, "mostrar");
     }
@@ -181,7 +207,7 @@ function agregarFilaArchivo(nombreArchivo, tipo, fecha, fechaMod) {
     const botonCompartir = document.createElement('button');
     botonCompartir.textContent = "Compartir";
     botonCompartir.onclick = function () {
-        console.log('Compartiras: ', nombre);
+        funcionCompartir(nombreArchivo);
     };
     compartir.appendChild(botonCompartir);
     //fecha de creacion
@@ -204,6 +230,33 @@ function agregarFilaArchivo(nombreArchivo, tipo, fecha, fechaMod) {
     tbody.appendChild(fila);
     localStorage.removeItem('token')
 }
+//funciones parta compartir
+function funcionCompartir(nombreArchivo) {
+    document.getElementById('formularioCompartir').style.display = "block";
+    document.getElementById('nombreArchivoCompartir').textContent = nombreArchivo;
+}
+function cerrarCompartir() {
+    document.getElementById('formularioCompartir').style.display = "none";
+    document.getElementById('nombreCompartir').value = "";
+}
+
+function compartirArchivo() {
+    const nombreArchivo = document.getElementById('nombreArchivoCompartir').textContent;
+    const usuarioCompartir = document.getElementById('nombreCompartir').value;
+    if (usuarioCompartir !== nombre) {
+        compartir(nombreArchivo, usuarioCompartir);
+    } else {
+        alert("No te puedes compartir tu propio archivo");
+    }
+
+    console.log(nombreArchivo, ' ', usuarioCompartir);
+}
+document.getElementById('compartirForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevents the default form submission
+    compartirArchivo();
+});
+
+
 //agrega filas a una tabla
 function agregarFilaCarpeta(nombre, tipo, fecha, fechaMod) {
     const tbody = document.getElementById('cuerpoTabla');
@@ -277,11 +330,13 @@ function editarArchivo(nombreArchivo) {
 function RegresarVista() {
 
     if (path === null) {
-        
+
     } else if (path === "/raiz") {
         path = null;
-    } else if (path === "/campartido") {
+    } else if (path === "/compartido") {
         path = null;
+        document.getElementById("divTabla").style.display = "block";
+        document.getElementById("divCompartido").style.display = "none"
     } else {
         let nuevo = path.lastIndexOf('/');
         if (nuevo !== -1) {
@@ -301,18 +356,103 @@ async function limpiarTabla() {
 }
 
 async function mostrarCarpetas() {
-    console.log('Esntra Aqui');
     limpiarTabla();
     if (path === null) {
         document.getElementById("path").textContent = "";
         obtenerCarpetas();
     } else {
-        document.getElementById("path").textContent = path;
-        obtenerArchivos();
-        obtenerCarpetas();
+        if (path === "/compartido") {
+            document.getElementById("divTabla").style.display = "none";
+            document.getElementById("divCompartido").style.display = "block"
+            obtenerArchivosCompartido()
+        } else {
+            document.getElementById("path").textContent = path;
+            obtenerArchivos();
+            obtenerCarpetas();
+        }
     }
 
 }
+async function obtenerArchivosCompartido() {
+    const cuerpoTabla = document.getElementById('cuerpoCompartido');
+    cuerpoTabla.innerHTML = '';
+    const url = `${urlGeneral}/consultaCompartido?autor=${nombre}`
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            const data = await response.json();
+            alert(data.message);
+        } else {
+            const data = await response.json();
+            recorrerCompartido(data);
+        }
+    } catch (error) {
+        console.log('Ocurrio un erro')
+    }
+}
+function recorrerCompartido(data) {
+    data.forEach(objeto => {
+        const id = objeto._id;
+        const nombreArchivo = objeto.nombre;
+        const extension = objeto.extension;
+        const contenido = objeto.contenido;
+        const propietario = objeto.propietario;
+        const creacion = new Date(objeto.creacion);
+        let opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        let opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+
+        let fechaEnEspanol = creacion.toLocaleDateString('es-ES', opcionesFecha);
+        let horaEn24Formato = creacion.toLocaleTimeString('es-ES', opcionesHora);
+
+        let fechaCompartido = `Fecha: ${fechaEnEspanol}, Hora: ${horaEn24Formato}`;
+        console.log(id);
+        agregarFilaCompartir(id,nombreArchivo,extension,contenido,propietario,fechaCompartido);
+    });
+}
+function agregarFilaCompartir(id, nombre, extension, contenido, propietario, fechaCompartido) {
+    const tbody = document.getElementById('cuerpoCompartido');
+    const fila = document.createElement('tr');
+
+    const celdaBotonArchivo = document.createElement('td');
+    const boton = document.createElement('button');
+    boton.textContent = nombre;
+    boton.onclick = function () {
+        document.getElementById("MostrarInformacion").textContent = `Nombre archivo: ${nombre}.${extension}`;
+        document.getElementById("muestra").value = contenido;
+        document.getElementById("mostrarArchivo").style.display = "block";
+    }
+    celdaBotonArchivo.appendChild(boton);
+    fila.appendChild(celdaBotonArchivo);
+
+    // Tipo
+    const tipo = document.createElement('td');
+    tipo.textContent = extension;
+    fila.appendChild(tipo);
+
+    // Compartido por
+    const compartidoPor = document.createElement('td');
+    compartidoPor.textContent = propietario;
+    fila.appendChild(compartidoPor);
+
+    // Fecha
+    const fechaC = document.createElement('td');
+    fechaC.textContent = fechaCompartido;
+    fila.appendChild(fechaC);
+
+    // Botón Eliminar
+    const eliminar = document.createElement('td');
+    const botonEliminar = document.createElement('button');
+    botonEliminar.textContent = 'Eliminar';  // Corrección aquí
+    botonEliminar.onclick = function () {
+
+        obtenerArchivosCompartido();
+    };
+    eliminar.appendChild(botonEliminar);
+    fila.appendChild(eliminar);
+
+    tbody.appendChild(fila);
+}
+
 function resetforms() {
     document.getElementById("newP").style.display = "none";
 }
@@ -343,15 +483,16 @@ async function crearArchivo(nombreNuevo, contenido, extension) {
 
         if (!res.ok) {
             const salida = await res.json();
-            alert(salida.message); // Se debe tratar la respuesta del servidor
+            alert(salida.message); 
         } else {
-            alert(`Archivo: ${nombreNuevo}.${extension} creado con éxito`); // Uso de plantilla de cadena
+            alert(`Archivo: ${nombreNuevo}.${extension} creado con éxito`); 
         }
     } catch (error) {
         console.error(error); // Registrar el error en la consola
-        // Podrías también usar alert para mostrar el error
+        
     }
 }
+//Eliminar compartido
 
 //Actualizar Contra 
 async function actualizar(nuevaContra) {
@@ -490,9 +631,73 @@ async function cambioEdicio(nombreArchivo, nuevoContenido) {
     }
 
 }
-function procesarInfo(data) {
+async function nuevaCarpeta(nuevoNombre) {
+    const pathIn = path + '/' + nuevoNombre;
+    console.log(pathIn);
+    const pathPadre = path;
+    const enPapelera = false;
+    const autor = nombre;
+    const creacio = new Date();
 
-    console.log(data);
+    const url1 = `${urlGeneral}/agregarDirectorio`;
+    const data = {
+        nombre: nuevoNombre,
+        path: pathIn,
+        pathPadre: pathPadre,
+        enPapelera: enPapelera,
+        autor: autor,
+        FechaDeCreacion: creacio
+    };
+    try {
+        const res = await fetch(url1, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+            const salida = await res.json();
+            alert(salida.message); // Se debe tratar la respuesta del servidor
+        } else {
+            alert(`Carpeta: ${nuevoNombre} creado con éxito`); // Uso de plantilla de cadena
+        }
+    } catch (error) {
+        console.error(error); // Registrar el error en la consola
+        // Podrías también usar alert para mostrar el error
+    }
+    await mostrarCarpetas();
+}
+async function compartir(nombreArchivo, usuarioCompartir) {
+    const url = `${urlGeneral}/compartir`;
+    const data = {
+        nombreArchivo: nombreArchivo,
+        autor: nombre,
+        path: path,
+        compartir: usuarioCompartir
+    };
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            const salida = await res.json();
+            alert(salida.message);
+        } else {
+            const salida = await res.json();
+            alert(salida.message);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+function procesarInfo(data) {
     data.forEach(objeto => {
         if (objeto.extension) {
             console.log('Archivo');

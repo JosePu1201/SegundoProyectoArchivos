@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1 id="titulo">CloudArch</h1>
-    <label for="text" id="NombreUsuario"></label>
+    <h2 id="NombreUsuario"></h2>
     <div id="botonesPrincipales">     
         <button type="submit" id="nuevaCarpeta" onclick="nuevaCarpetaView()">Nueva carpeta</button>
         <button type="submit" id="nuevohtml" >Nuevo archivo html </button>
@@ -21,7 +21,19 @@
             <form id="nuevaCarpetaForm">
                 <label for="nombreCarpeta">Nombre de la carpeta:</label>
                 <input type="text" id="nombreCarpeta" required>
-                <button type="submit">Crear</button>
+                <button type="submit" onclick="agregarCarpeta(event)">Crear</button>
+            </form>
+        </div>
+    </div>
+    <div id="formularioCompartir" class="modal" style="display: none">
+        <div class="modal-content">
+            <p>Archivo a compartir: <span id="nombreArchivoCompartir"></span></p>
+            <h2></h2>
+            <span class="cerrarCompartir" onclick="cerrarCompartir()">&times;</span>
+            <form id="compartirForm">
+                <label for="nombreCompartir">Usuario: </label>
+                <input type="text" id="nombreCompartir" required>
+                <button type="submit" >Compartir</button>
             </form>
         </div>
     </div>
@@ -79,10 +91,10 @@
             <img src="https://png.pngtree.com/png-vector/20220617/ourlarge/pngtree-previous-arrow-button-direction-left-png-image_5179005.png" alt="Flecha">
             Anterior
         </button>
-        <label for="text" id="path"></label>
+        <h2 id="path"></h2>
         
     </div>
-    <div>
+    <div id="divTabla">
         <table>
             <thead>
                 <tr>
@@ -98,6 +110,23 @@
                 </tr>
             </thead>
             <tbody id="cuerpoTabla">
+                
+            </tbody>
+        </table>
+    </div>
+    <div id="divCompartido" style="display: none">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Compartido por</th>
+                    <th>Fecha y hora compartido</th>
+                    <th>Eliminar</th>
+
+                </tr>
+            </thead>
+            <tbody id="cuerpoCompartido">
                 
             </tbody>
         </table>
