@@ -176,6 +176,7 @@ function agregarFilaArchivo(nombreArchivo, tipo, fecha, fechaMod) {
     botonEditar.textContent = "Editar";
     botonEditar.onclick = function () {
         editarArchivo(nombreArchivo);
+        
     };
     celdaBotonEditar.appendChild(botonEditar);
     //boton para copiar
@@ -409,7 +410,7 @@ function recorrerCompartido(data) {
         agregarFilaCompartir(id,nombreArchivo,extension,contenido,propietario,fechaCompartido);
     });
 }
-function agregarFilaCompartir(id, nombre, extension, contenido, propietario, fechaCompartido) {
+async function agregarFilaCompartir(id, nombre, extension, contenido, propietario, fechaCompartido) {
     const tbody = document.getElementById('cuerpoCompartido');
     const fila = document.createElement('tr');
 
@@ -443,8 +444,8 @@ function agregarFilaCompartir(id, nombre, extension, contenido, propietario, fec
     const eliminar = document.createElement('td');
     const botonEliminar = document.createElement('button');
     botonEliminar.textContent = 'Eliminar';  // Corrección aquí
-    botonEliminar.onclick = function () {
-
+    botonEliminar.onclick = async function () {
+        await eliminarCompartido(id);
         obtenerArchivosCompartido();
     };
     eliminar.appendChild(botonEliminar);
@@ -493,6 +494,31 @@ async function crearArchivo(nombreNuevo, contenido, extension) {
     }
 }
 //Eliminar compartido
+async function eliminarCompartido(id) {
+    const url = `${urlGeneral}/eliminarCompartido?id=${id}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                // Puedes incluir otros encabezados según sea necesario
+            }
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            alert(data.message);
+        } else {
+            const data = await response.json();
+            alert(data.message);
+        }
+    } catch (error) {
+        console.error('Error al eliminar compartido:', error);
+        alert('Ocurrió un error al eliminar');
+    }
+}
+
 
 //Actualizar Contra 
 async function actualizar(nuevaContra) {
@@ -629,6 +655,7 @@ async function cambioEdicio(nombreArchivo, nuevoContenido) {
     } else {
         alert(`Archivo: ${nombreArchivo} actualizado con exito`);
     }
+    await mostrarCarpetas();
 
 }
 async function nuevaCarpeta(nuevoNombre) {

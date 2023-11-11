@@ -99,6 +99,7 @@ const cambiarContenido = async (req, res) => {
     const nombre = req.body.nombre;
     const autor = req.body.autor;
     const nuevoContenido = req.body.contenido;
+    const fechaNueva = new Date();
     try {
         const contenidnuevo = await archivo.updateOne({
             pathPadre: path,
@@ -106,7 +107,8 @@ const cambiarContenido = async (req, res) => {
             autor: autor
         }, {
             $set: {
-                contenido: nuevoContenido
+                contenido: nuevoContenido,
+                modificacion: fechaNueva
             }
         });
 

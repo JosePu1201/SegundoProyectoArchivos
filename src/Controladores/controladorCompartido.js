@@ -68,13 +68,13 @@ const consultaCompartido = async (req,res) =>{
 };
 
 const eliminarPorID = async (req, res) => {
-    const idCompartido = req.body.id;
-
+    const idCompartido = req.query.id;
+    console.log(idCompartido);
     try {
         const compartidoEncontrado = await compartido.findById(idCompartido);
 
         if (compartidoEncontrado) {
-            await compartidoEncontrado.delete(); // Utilizando delete en lugar de remove
+            await compartidoEncontrado.deleteOne(); 
             res.json({ message: "Elemento compartido eliminado con éxito" });
         } else {
             res.status(404).json({ message: "Elemento compartido no encontrado" });
