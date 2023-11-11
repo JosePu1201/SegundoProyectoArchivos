@@ -20,7 +20,30 @@ db.usuarios.insertOne({
     Contra: '1234',
     rol: 'Admin'
 });
-
+db.directorios.insertOne({
+    nombre: "raiz",
+    path: "/raiz",
+    pathPadre: null,
+    enPapelera: false,
+    autor: "usuario2",
+    FechaDeCreacion: new Date('2023-10-25')
+});
+db.directorios.insertOne({
+    nombre: "compartido",
+    path: "/compartido",
+    pathPadre: null,
+    enPapelera: false,
+    autor: "usuario2",
+    FechaDeCreacion: new Date('2023-10-25')
+});
+db.directorios.insertOne({
+    nombre: "papelera",
+    path: "/papelera",
+    pathPadre: null,
+    enPapelera: false,
+    autor: "usuario2",
+    FechaDeCreacion: new Date('2023-10-25')
+});
 db.directorios.insertOne({
     nombre: "raiz",
     path: "/raiz",
