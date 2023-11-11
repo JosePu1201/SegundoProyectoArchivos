@@ -27,6 +27,7 @@ const obtenerDirectorio = async (req, res) => {
     res.json();
 }
 const obtenerDirectorioPorPathAutor = async (req, res) => {
+    console.log("------------------------------------");
     const pathPadre = req.query.path;
     const autor = req.query.autor;
     console.log('entra aca', pathPadre);
@@ -49,7 +50,8 @@ const obtenerDirectorioPorPathAutor = async (req, res) => {
             });
         }
 
-        res.json(directorioEncontrados);
+        await res.json(directorioEncontrados);
+        console.log(directorioEncontrados);
     } catch (error) {
         console.error('Error al buscar la carpeta:', error);
         res.status(500).json({ message: 'Error al buscar la carpeta' });
@@ -58,15 +60,26 @@ const obtenerDirectorioPorPathAutor = async (req, res) => {
 const obtenerPathPorNombre = async (req, res) => {
     const nombreCarpeta = req.query.nombreCarpeta;
     const autor = req.query.autor;
-
+    const pathPadre = req.query.path;
+    console.log('entra a primera peticion');
     try {
         let directorioEncontrados;
-        directorioEncontrados = await directorio.findOne({
+        if(pathPadre === 'null'){
+            directorioEncontrados = await directorio.findOne({
+                pathPadre: { $in: [null, ''] },
+                nombre: nombreCarpeta,
+                autor: autor,
+                enPapelera: false
+            });
+        }else{
+            directorioEncontrados = await directorio.findOne({
+            pathPadre: pathPadre,
             nombre: nombreCarpeta,
             autor: autor,
             enPapelera: false
         });
-
+        }
+        console.log(res.path);
         res.json(directorioEncontrados);
 
     } catch (error) {

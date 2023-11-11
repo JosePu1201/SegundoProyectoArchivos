@@ -1,5 +1,6 @@
 
 
+
 const parametro = new URLSearchParams(window.location.search)
 const nombre = parametro.get('nombre');
 const urlGeneral = `http://localhost:4000/api`;
@@ -127,7 +128,7 @@ document.getElementById("txtForm").addEventListener("submit", async function (ev
     const fileName = document.getElementById("fileName").value;
     const fileContent = document.getElementById("fileContent").value;
     const ext = document.getElementById("extension").value;
-    if (path === null || path === '/compartido') {
+    if (path === null || path === '/compartido' || path ==='/papelera') {
         alert("En  esta carpeta no se pueden crear archivos");
         closeModal();
     } else {
@@ -141,8 +142,19 @@ document.getElementById("txtForm").addEventListener("submit", async function (ev
 });
 //funcion que configura todo al inicio
 async function configInicial() {
-    document.getElementById("NombreUsuario").textContent = `Administrador: ${nombre}`;
+    //document.getElementById("NombreUsuario").textContent = `Administrador: ${nombre}`;
     mostrarCarpetas();
+    const currentUrl = window.location.href;
+    const matches = currentUrl.match(/\/([^\/?#]+)[^\/]*$/);
+    const sourceHTML = matches ? matches[1] : 'Desconocido';
+    if(sourceHTML === "vistaAdmin.html"){
+        document.getElementById("NombreUsuario").textContent = `Administrador: ${nombre}`;
+    }else{
+        document.getElementById("NombreUsuario").textContent = `Empleado: ${nombre}`;
+    }
+  
+
+    // Resto del código en admin.js
 }
 //valida que tipo para decidir accion
 async function validarTipo(tipo, nombreCarpeta) {
@@ -176,7 +188,7 @@ function agregarFilaArchivo(nombreArchivo, tipo, fecha, fechaMod) {
     botonEditar.textContent = "Editar";
     botonEditar.onclick = function () {
         editarArchivo(nombreArchivo);
-        
+
     };
     celdaBotonEditar.appendChild(botonEditar);
     //boton para copiar
@@ -338,9 +350,10 @@ function RegresarVista() {
         path = null;
         document.getElementById("divTabla").style.display = "block";
         document.getElementById("divCompartido").style.display = "none"
-    } else if(path === "/papelera"){
+    } else if (path === "/papelera") {
         path = null;
-    }else {
+        terminarPapelera();
+    } else {
         let nuevo = path.lastIndexOf('/');
         if (nuevo !== -1) {
             const antesDiagonal = path.substring(0, nuevo);
@@ -368,9 +381,9 @@ async function mostrarCarpetas() {
             document.getElementById("divTabla").style.display = "none";
             document.getElementById("divCompartido").style.display = "block"
             obtenerArchivosCompartido()
-        } else if(path ==="/papelera"){
-            console.log("asdasdsa");
-        }else {
+        } else if (path === "/papelera") {
+            vistaPapelera();
+        } else {
             document.getElementById("path").textContent = path;
             obtenerArchivos();
             obtenerCarpetas();
@@ -411,7 +424,7 @@ function recorrerCompartido(data) {
 
         let fechaCompartido = `Fecha: ${fechaEnEspanol}, Hora: ${horaEn24Formato}`;
         console.log(id);
-        agregarFilaCompartir(id,nombreArchivo,extension,contenido,propietario,fechaCompartido);
+        agregarFilaCompartir(id, nombreArchivo, extension, contenido, propietario, fechaCompartido);
     });
 }
 async function agregarFilaCompartir(id, nombre, extension, contenido, propietario, fechaCompartido) {
@@ -488,13 +501,13 @@ async function crearArchivo(nombreNuevo, contenido, extension) {
 
         if (!res.ok) {
             const salida = await res.json();
-            alert(salida.message); 
+            alert(salida.message);
         } else {
-            alert(`Archivo: ${nombreNuevo}.${extension} creado con éxito`); 
+            alert(`Archivo: ${nombreNuevo}.${extension} creado con éxito`);
         }
     } catch (error) {
         console.error(error); // Registrar el error en la consola
-        
+
     }
 }
 //Eliminar compartido
@@ -560,14 +573,14 @@ async function obtenerCarpetas() {
     }
 }
 async function obtenerPathCarpeta(nombreCarpeta) {
-    const url1 = `${urlGeneral}/consultanombreAutor?nombreCarpeta=${nombreCarpeta}&autor=${nombre}`;
+    const url1 = `${urlGeneral}/consultanombreAutor?nombreCarpeta=${nombreCarpeta}&autor=${nombre}&path=${path}`;
     try {
         const response = await fetch(url1);
         if (!response.ok) {
 
         }
         const data = await response.json();
-        console.log('el nuevo path',data.path);
+        console.log('el nuevo path', data.path);
         path = data.path;
     } catch (error) {
 

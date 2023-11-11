@@ -8,7 +8,8 @@
 <body>
     <h1 id="titulo">CloudArch</h1>
     <h2 id="NombreUsuario"></h2>
-    <div id="botonesPrincipales">     
+    <div id="botonesPrincipales">
+        <button type="submit" id="nuevoUsuario" onclick="nuevoUsuario()">Nuevo empleado</button>     
         <button type="submit" id="nuevaCarpeta" onclick="nuevaCarpetaView()">Nueva carpeta</button>
         <button type="submit" id="nuevohtml" >Nuevo archivo html </button>
         <button type="submit" id="nuevotxt">Nuevo archivo txt</button>
@@ -34,6 +35,18 @@
                 <label for="nombreCompartir">Usuario: </label>
                 <input type="text" id="nombreCompartir" required>
                 <button type="submit" >Compartir</button>
+            </form>
+        </div>
+    </div>
+    <div id="formularioNuevoUsuario" class="modal" style="display: none">
+        <div class="modal-content">
+            <span class="cerrarCrear" onclick="cerrarCrear()">&times;</span>
+            <form id="crearForm">
+                <label for="NombreUsuarioNuevo">Usuario: </label>
+                <input type="text" id="NombreUsuarioNuevo" required>
+                <label for="ContraUsuarioNuevo">Contraseña: </label>
+                <input type="text" id="ContraUsuarioNuevo" required>
+                <button type="submit" onclick="crearUser(event)">Crear usuario</button>
             </form>
         </div>
     </div>
@@ -131,8 +144,24 @@
             </tbody>
         </table>
     </div>
+        <div id="divPapelera" style="display: none">
+        <h1>Papelera</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Autor</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoPapelera">
+                
+            </tbody>
+        </table>
+    </div>
 
     <script src="admin.js"></script>
+    <script src="controlAdmin.js"></script>
 </body>
 </html>
 

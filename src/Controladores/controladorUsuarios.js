@@ -1,5 +1,5 @@
 const usuario = require('../Modelos/usuario');
-
+const directorio = require('../Modelos/directorio');
 //Agrega un nuvo usuario
 const agregarUsuario = async (req, res) => {
     const existeUser = await usuario.findOne({ 'usuario': req.body.usuario });
@@ -13,11 +13,32 @@ const agregarUsuario = async (req, res) => {
             Contra: req.body.Contra,
             rol: req.body.rol
         });
-            if(req.body.Contra === "" && req.body.usuario === ""){
-
-            }
         const confirmacion = await insertarUsuario.save();
-        res.json(confirmacion);
+        if(confirmacion){
+            const insertarRaiz = new directorio({
+                nombre: "raiz",
+                path: "/raiz",
+                pathPadre: null,
+                enPapelera: false,
+                autor: req.body.usuario,
+                FechaDeCreacion: new Date()
+            });
+            const confirmacionRaiz = await insertarRaiz.save();
+
+            const insertarCompartir = new directorio({
+                nombre: "compartido",
+                path: "/compartido",
+                pathPadre: null,
+                enPapelera: false,
+                autor: req.body.usuario,
+                FechaDeCreacion: new Date()
+            });
+            const confirmacionCompartir = await insertarCompartir.save();
+            res.json({message: "Usuario insertado con exito\nCarpetas raiz y compartido asociados al usuario"});
+        }else{
+            res.json({message: "Ocurrio un error en el servidor"})
+        }
+        
     }
 };
 

@@ -14,4 +14,5 @@ ruter.get('/consultaArchivoPathAutor',controladorArchivo.obtenerArchivosPorPathY
 ruter.put('/moverPapelera',controladorArchivo.moverAPapelera);
 ruter.get('/mostrarContenido',controladorArchivo.obtenerArchivoPorPathAutorNombre);
 ruter.put('/actualizarContenido',controladorArchivo.cambiarContenido);
+ruter.get('/archivosEnPapelera',controladorArchivo.obtenerArchivosEnPapelera);
 module.exports = ruter;

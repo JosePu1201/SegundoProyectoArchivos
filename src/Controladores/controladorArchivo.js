@@ -117,12 +117,19 @@ const cambiarContenido = async (req, res) => {
         res.status(500).body({ mensaje: 'error al actualizar el contenido' });
     }
 };
-
+const obtenerArchivosEnPapelera = async (req,res) =>{
+    const archivosEncontrados = await archivo.find({
+        pathPadre: "/papelera",
+        enPapelera: true
+    });
+    res.json(archivosEncontrados);
+};
 module.exports = {
     agregarArchivo,
     obtenerArchivo,
     obtenerArchivosPorPathYAutor,
     moverAPapelera,
     obtenerArchivoPorPathAutorNombre,
-    cambiarContenido
+    cambiarContenido,
+    obtenerArchivosEnPapelera
 }

@@ -2,6 +2,7 @@ const form = document.getElementById('login-form');
 form.addEventListener('submit', validarUsuario);
 
 async function validarUsuario(evento) {
+    console.log('entra aca para pedir nombre');
     evento.preventDefault();
     const nombre = document.getElementById('username').value;
     const contra = document.getElementById('password').value;
@@ -12,7 +13,9 @@ async function validarUsuario(evento) {
         const response = await fetch(url);
 
         if (!response.ok) {
-            alert("El usuario o contraseña no son validos ")
+            alert("El usuario o contraseña no son validos ");
+            document.getElementById('username').value = "";
+            document.getElementById('password').value = "";
         }
 
         const data = await response.json();
