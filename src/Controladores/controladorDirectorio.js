@@ -61,7 +61,7 @@ const obtenerPathPorNombre = async (req, res) => {
     const nombreCarpeta = req.query.nombreCarpeta;
     const autor = req.query.autor;
     const pathPadre = req.query.path;
-    console.log('entra a primera peticion');
+    //console.log('entra a primera peticion');
     try {
         let directorioEncontrados;
         if (pathPadre === 'null') {
@@ -79,7 +79,7 @@ const obtenerPathPorNombre = async (req, res) => {
                 enPapelera: false
             });
         }
-        console.log(res.path);
+        //console.log(res.path);
         res.json(directorioEncontrados);
 
     } catch (error) {

@@ -36,7 +36,7 @@ const insertarCompartido= async(req,res)=>{
                 
                 if(confirmacion){
                     res.json({message: "Archivo compartido con exito"});
-                    console.log(confirmacion);
+                    //console.log(confirmacion);
                 }
                 else{
                     res.json({message: "ocurrio un errror al compartir"})

@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  db:
+    image: mongo:7.0.2
+    container_name: proyecto2-mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./data:/data/db
+      - ./data/log:/var/log/mongodb
+
+  nodeapp:
+    container_name: proyecto2-node
+    build: .
+    depends_on:
+      - db
+    links:
+      - db
+    ports:
+      - "4000:4000"

@@ -1,6 +1,6 @@
 const mongoose = require (`mongoose`);
-
-const host = 'localhost';
+//coneccion a base de datos en docker
+const host = 'db';
 const port = 27017;
 const database = 'CloudArch';
 

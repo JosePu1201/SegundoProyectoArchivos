@@ -27,7 +27,7 @@ const agregarArchivo = async (req, res) => {
 
         const confirmacion = await insertarArchivo.save();
         res.json(confirmacion);
-        console.log(confirmacion);
+        //console.log(confirmacion);
     }
 };
 
@@ -87,7 +87,7 @@ const moverAPapelera = async (req, res) => {
                 }
             });
         res.json(archivoMovido);
-        console.log(archivoMovido);
+        //console.log(archivoMovido);
     } catch (error) {
         res.status(500).body({ mensaje: 'error al eliminar' });
     }

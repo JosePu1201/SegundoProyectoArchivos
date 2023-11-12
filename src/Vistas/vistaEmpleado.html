@@ -20,7 +20,7 @@
             <span class="closeN" onclick="cerrarFormularioCarpeta()">&times;</span>
             <form id="nuevaCarpetaForm">
                 <label for="nombreCarpeta">Nombre de la carpeta:</label>
-                <input type="text" id="nombreCarpeta" required>
+                <input type="text" id="nombreCarpeta" autocomplete="off" required>
                 <button type="submit" onclick="agregarCarpeta(event)">Crear</button>
             </form>
         </div>
@@ -32,7 +32,7 @@
             <span class="cerrarCompartir" onclick="cerrarCompartir()">&times;</span>
             <form id="compartirForm">
                 <label for="nombreCompartir">Usuario: </label>
-                <input type="text" id="nombreCompartir" required>
+                <input type="text" id="nombreCompartir" autocomplete="off" required>
                 <button type="submit" >Compartir</button>
             </form>
         </div>
@@ -42,7 +42,7 @@
             <h2>Nuevo Archivo</h2>
             <form id="txtForm">
                 <label for="fileName">Nombre del Archivo:</label>
-                <input type="text" id="fileName" name="fileName">
+                <input type="text" id="fileName" name="fileName" autocomplete="off">
                 <span>.</span>
                 <span id="extension"> </span>
                 <br><br>
@@ -77,10 +77,10 @@
             <span class="closePas">&times;</span>
             <form id="passwordForm">
                 <label for="newPassword">Nueva contraseña:    </label>
-                <input type="password" id="newPassword" name="newPassword">
+                <input type="password" id="newPassword" name="newPassword" autocomplete="off" >
                 <br>
                 <label for="confirmPassword">Confirmar contraseña: </label>
-                <input type="password" id="confirmPassword"name="confirmPassword">
+                <input type="password" id="confirmPassword"name="confirmPassword" autocomplete="off">
                 <br>
                 <input type="submit" value="Cambiar contraseña">
             </form>
