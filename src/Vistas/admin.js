@@ -22,7 +22,7 @@ document.getElementById("actualizar").addEventListener("click", function () {
     document.getElementById("newP").style.display = "block";
 });
 
-document.getElementsByClassName("close")[0].addEventListener("click", function () {
+document.getElementsByClassName("closePas")[0].addEventListener("click", function () {
     document.getElementById("newP").style.display = "none";
 });
 
@@ -128,7 +128,7 @@ document.getElementById("txtForm").addEventListener("submit", async function (ev
     const fileName = document.getElementById("fileName").value;
     const fileContent = document.getElementById("fileContent").value;
     const ext = document.getElementById("extension").value;
-    if (path === null || path === '/compartido' || path ==='/papelera') {
+    if (path === null || path === '/compartido' || path === '/papelera') {
         alert("En  esta carpeta no se pueden crear archivos");
         closeModal();
     } else {
@@ -147,12 +147,12 @@ async function configInicial() {
     const currentUrl = window.location.href;
     const matches = currentUrl.match(/\/([^\/?#]+)[^\/]*$/);
     const sourceHTML = matches ? matches[1] : 'Desconocido';
-    if(sourceHTML === "vistaAdmin.html"){
+    if (sourceHTML === "vistaAdmin.html") {
         document.getElementById("NombreUsuario").textContent = `Administrador: ${nombre}`;
-    }else{
+    } else {
         document.getElementById("NombreUsuario").textContent = `Empleado: ${nombre}`;
     }
-  
+
 
     // Resto del código en admin.js
 }
@@ -204,7 +204,7 @@ function agregarFilaArchivo(nombreArchivo, tipo, fecha, fechaMod) {
     const botonMover = document.createElement('button');
     botonMover.textContent = "Mover";
     botonMover.onclick = function () {
-        console.log('Moveras:  ', nombreArchivo);
+        setDatos(path,nombreArchivo,"Archivo")
     };
     celdaBotonMover.appendChild(botonMover);
     //boton para elimiar
@@ -292,28 +292,42 @@ function agregarFilaCarpeta(nombre, tipo, fecha, fechaMod) {
     celdaBotonEditar.textContent = "    ";
     //boton para copiar
     const celdaBotonCopiar = document.createElement('td');
-    const botonCopia = document.createElement('button');
-    botonCopia.textContent = "Copiar";
-    botonCopia.onclick = function () {
-        console.log('Copiaras:  ', nombre);
-    };
-    celdaBotonCopiar.appendChild(botonCopia);
+    if (path === null) {
+        celdaBotonCopiar.textContent = ""
+    } else {
+        const botonCopia = document.createElement('button');
+        botonCopia.textContent = "Copiar";
+        botonCopia.onclick = function () {
+            console.log('Copiaras:  ', nombre);
+        };
+        celdaBotonCopiar.appendChild(botonCopia);
+    }
     //boton para mover
     const celdaBotonMover = document.createElement('td');
-    const botonMover = document.createElement('button');
-    botonMover.textContent = "Mover";
-    botonMover.onclick = function () {
-        console.log('Moveras:  ', nombre);
-    };
-    celdaBotonMover.appendChild(botonMover);
+    if (path === null) {
+
+    } else {
+        const botonMover = document.createElement('button');
+        botonMover.textContent = "Mover";
+        botonMover.onclick = function () {
+            setDatos(path, nombre, "Carpeta");
+        };
+        celdaBotonMover.appendChild(botonMover);
+    }
+
     //boton para elimiar
     const celdaBotonEliminar = document.createElement('td');
-    const botonElimina = document.createElement('button');
-    botonElimina.textContent = "Eliminar";
-    botonElimina.onclick = function () {
-        console.log('Eliminaras:  ', nombre);
-    };
-    celdaBotonEliminar.appendChild(botonElimina);
+    if (path === null) {
+
+    } else {
+        const botonElimina = document.createElement('button');
+        botonElimina.textContent = "Eliminar";
+        botonElimina.onclick = function () {
+            console.log('Eliminaras:  ', nombre);
+        };
+        celdaBotonEliminar.appendChild(botonElimina);
+    }
+
     //Espacio para compartir 
     const compartir = document.createElement('td');
     compartir.textContent = "";

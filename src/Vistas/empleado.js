@@ -176,7 +176,7 @@ function agregarFilaArchivo(nombreArchivo, tipo, fecha, fechaMod) {
     botonEditar.textContent = "Editar";
     botonEditar.onclick = function () {
         editarArchivo(nombreArchivo);
-        
+
     };
     celdaBotonEditar.appendChild(botonEditar);
     //boton para copiar
@@ -192,7 +192,7 @@ function agregarFilaArchivo(nombreArchivo, tipo, fecha, fechaMod) {
     const botonMover = document.createElement('button');
     botonMover.textContent = "Mover";
     botonMover.onclick = function () {
-        console.log('Moveras:  ', nombreArchivo);
+        setDatos(path, nombreArchivo, "Archivo");
     };
     celdaBotonMover.appendChild(botonMover);
     //boton para elimiar
@@ -280,18 +280,23 @@ function agregarFilaCarpeta(nombre, tipo, fecha, fechaMod) {
     celdaBotonEditar.textContent = "    ";
     //boton para copiar
     const celdaBotonCopiar = document.createElement('td');
-    const botonCopia = document.createElement('button');
-    botonCopia.textContent = "Copiar";
-    botonCopia.onclick = function () {
-        console.log('Copiaras:  ', nombre);
-    };
-    celdaBotonCopiar.appendChild(botonCopia);
+    if (path === 'null') {
+        celdaBotonCopiar.textContent = ""
+    } else {
+        const botonCopia = document.createElement('button');
+        botonCopia.textContent = "Copiar";
+        botonCopia.onclick = function () {
+            console.log('Copiaras:  ', nombre);
+        };
+        celdaBotonCopiar.appendChild(botonCopia);
+    }
+
     //boton para mover
     const celdaBotonMover = document.createElement('td');
     const botonMover = document.createElement('button');
     botonMover.textContent = "Mover";
     botonMover.onclick = function () {
-        console.log('Moveras:  ', nombre);
+        //console.log('Moveras:  ', nombre);
     };
     celdaBotonMover.appendChild(botonMover);
     //boton para elimiar
@@ -407,7 +412,7 @@ function recorrerCompartido(data) {
 
         let fechaCompartido = `Fecha: ${fechaEnEspanol}, Hora: ${horaEn24Formato}`;
         console.log(id);
-        agregarFilaCompartir(id,nombreArchivo,extension,contenido,propietario,fechaCompartido);
+        agregarFilaCompartir(id, nombreArchivo, extension, contenido, propietario, fechaCompartido);
     });
 }
 async function agregarFilaCompartir(id, nombre, extension, contenido, propietario, fechaCompartido) {
@@ -484,13 +489,13 @@ async function crearArchivo(nombreNuevo, contenido, extension) {
 
         if (!res.ok) {
             const salida = await res.json();
-            alert(salida.message); 
+            alert(salida.message);
         } else {
-            alert(`Archivo: ${nombreNuevo}.${extension} creado con éxito`); 
+            alert(`Archivo: ${nombreNuevo}.${extension} creado con éxito`);
         }
     } catch (error) {
         console.error(error); // Registrar el error en la consola
-        
+
     }
 }
 //Eliminar compartido
@@ -765,3 +770,6 @@ function procesarInfo(data) {
         }
     });
 }
+
+
+

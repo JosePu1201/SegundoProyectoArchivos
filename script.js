@@ -10,13 +10,9 @@ db.usuarios.insertOne({
     Contra: '1234',
     rol: 'Empleado'
 });
+
 db.usuarios.insertOne({
-    usuario: 'user1',
-    Contra: '1234',
-    rol: 'Empleado'
-});
-db.usuarios.insertOne({
-    usuario: 'usuario2',
+    usuario: 'admin',
     Contra: '1234',
     rol: 'Admin'
 });
@@ -25,7 +21,7 @@ db.directorios.insertOne({
     path: "/raiz",
     pathPadre: null,
     enPapelera: false,
-    autor: "usuario2",
+    autor: "admin",
     FechaDeCreacion: new Date('2023-10-25')
 });
 db.directorios.insertOne({
@@ -33,7 +29,7 @@ db.directorios.insertOne({
     path: "/compartido",
     pathPadre: null,
     enPapelera: false,
-    autor: "usuario2",
+    autor: "admin",
     FechaDeCreacion: new Date('2023-10-25')
 });
 db.directorios.insertOne({
@@ -41,7 +37,7 @@ db.directorios.insertOne({
     path: "/papelera",
     pathPadre: null,
     enPapelera: false,
-    autor: "usuario2",
+    autor: "admin",
     FechaDeCreacion: new Date('2023-10-25')
 });
 db.directorios.insertOne({
@@ -52,22 +48,8 @@ db.directorios.insertOne({
     autor: "user",
     FechaDeCreacion: new Date('2023-10-25')
 });
-db.directorios.insertOne({
-    nombre: "raiz",
-    path: "/raiz",
-    pathPadre: null,
-    enPapelera: false,
-    autor: "user1",
-    FechaDeCreacion: new Date('2023-10-25')
-});
-db.directorios.insertOne({
-    nombre: "compartido",
-    path: "/compartido",
-    pathPadre: null,
-    enPapelera: false,
-    autor: "user1",
-    FechaDeCreacion: new Date('2023-10-25')
-});
+
+
 db.directorios.insertOne({
     nombre: "compartido",
     path: "/compartido",
@@ -76,30 +58,7 @@ db.directorios.insertOne({
     autor: "user",
     FechaDeCreacion: new Date('2023-10-25')
 });
-db.directorios.insertOne({
-    nombre: "nuevo",
-    path: "/raiz/nuevo",
-    pathPadre: "/raiz",
-    enPapelera: false,
-    autor: "user",
-    FechaDeCreacion: new Date('2023-10-27')
-});
-db.directorios.insertOne({
-    nombre: "nuevo1",
-    path: "/raiz/nuevo1",
-    pathPadre: "/raiz",
-    enPapelera: false,
-    autor: "user",
-    FechaDeCreacion: new Date('2023-10-27')
-});
-db.directorios.insertOne({
-    nombre: "nuevo2",
-    path: "/raiz/nuevo2",
-    pathPadre: "/raiz",
-    enPapelera: false,
-    autor: "user",
-    FechaDeCreacion: new Date('2023-10-27')
-});
+
 db.archivos.insertOne({
     nombre: "nuevoArchivoPrueba",
     autor: "user",

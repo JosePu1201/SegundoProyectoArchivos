@@ -10,4 +10,5 @@ ruter.post('/agregarDirectorio',controladorDirectorio.agregarDirectorio);
 
 ruter.get('/consultaDirectorioPathAutor',controladorDirectorio.obtenerDirectorioPorPathAutor);
 ruter.get('/consultanombreAutor',controladorDirectorio.obtenerPathPorNombre);
+ruter.put('/moverDirectorio',controladorDirectorio.moverDirectorio);
 module.exports = ruter;

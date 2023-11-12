@@ -74,7 +74,7 @@
     </div>
     <div id="newP" class="modal" >
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="closePas">&times;</span>
             <form id="passwordForm">
                 <label for="newPassword">Nueva contraseña:    </label>
                 <input type="password" id="newPassword" name="newPassword">
@@ -85,6 +85,18 @@
                 <input type="submit" value="Cambiar contraseña">
             </form>
         </div>
+    </div>
+    <div id="MoverA" style="display: none">
+        <span id="tipoMover"> </span>
+        <br>
+        <span>Nombre: </span>
+        <span id="nombreMover"></span>
+        <br>
+        <span>Ubicacion anterior: </span>
+        <span id="ubiAnterior"></span>
+        <br>
+        <button onclick="moverAqui()">Mover aqui</button>
+        <button onclick="cancelarMover()">Cancelar</button>
     </div>
     <div>
         <button id="regresarLaVista" onclick="RegresarVista()">
@@ -133,6 +145,7 @@
     </div>
 
     <script src="admin.js"></script>
+    <script src="mover.js"></script>
 
 </body>
 </html>

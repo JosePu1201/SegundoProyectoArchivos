@@ -84,7 +84,6 @@ const moverAPapelera = async (req, res) => {
             {
                 $set: {
                     pathPadre: '/papelera',
-                    enPapelera: true
                 }
             });
         res.json(archivoMovido);
@@ -120,10 +119,12 @@ const cambiarContenido = async (req, res) => {
 const obtenerArchivosEnPapelera = async (req,res) =>{
     const archivosEncontrados = await archivo.find({
         pathPadre: "/papelera",
-        enPapelera: true
     });
     res.json(archivosEncontrados);
 };
+const moverDirectorio = async (req,res)=>{
+    
+}
 module.exports = {
     agregarArchivo,
     obtenerArchivo,
