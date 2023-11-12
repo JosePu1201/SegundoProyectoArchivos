@@ -54,6 +54,7 @@ async function nuevoUsuarioAgregar(nombre, contra) {
     }
 
 }
+//vistas en papelera
 function vistaPapelera() {
     document.getElementById('divPapelera').style.display = "block";
     document.getElementById('divTabla').style.display = "none";

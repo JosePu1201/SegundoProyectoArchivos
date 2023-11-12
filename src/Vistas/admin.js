@@ -323,7 +323,7 @@ function agregarFilaCarpeta(nombre, tipo, fecha, fechaMod) {
         const botonElimina = document.createElement('button');
         botonElimina.textContent = "Eliminar";
         botonElimina.onclick = function () {
-            console.log('Eliminaras:  ', nombre);
+            moverDirectrioPapelera(path,nombre);
         };
         celdaBotonEliminar.appendChild(botonElimina);
     }

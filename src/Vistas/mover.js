@@ -37,15 +37,17 @@ function moverAqui() {
             }
             
         } else {
-            //Funcion para mover archivo
-            console.log("es un archivo, se puede mover a donde quiera xD");
+            moverArchivoAPI(pathAntiguo,path,nombreDirectorio,nombre);
+            cancelarMover();
         }
 
     } else {
         //No se puede mover
     }
 }
-
+function moverDirectrioPapelera(path,nombreDirectorio){
+    moverDirectorioAPI(path,"/papelera",nombreDirectorio,nombre)
+}
 
 async function moverDirectorioAPI(pathAntiguo, nuevoPath, nombreDirectorio, autor) {
     const url = `${urlGeneral}/moverDirectorio`;
@@ -53,6 +55,38 @@ async function moverDirectorioAPI(pathAntiguo, nuevoPath, nombreDirectorio, auto
         antiguoPadre: pathAntiguo,
         nuevoPadre: nuevoPath,
         nombreDirectorio: nombreDirectorio,
+        autor: autor
+    };
+
+    try {
+        const res = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+            const respuesta = await res.json();
+            alert(respuesta.message);
+        } else {
+            const respuesta = await res.json();
+            alert(respuesta.message);
+        }
+
+        await mostrarCarpetas();
+    } catch (error) {
+        console.error('Error al intentar mover el directorio:', error);
+        // Manejar el error de alguna manera (puede mostrar un mensaje al usuario)
+    }
+}
+async function moverArchivoAPI(pathAntiguo, nuevoPath, nombreArchivo, autor) {
+    const url = `${urlGeneral}/moverArchivo`;
+    const data = {
+        pathAntiguo: pathAntiguo,
+        nuevoPath: nuevoPath,
+        nombreArchivo: nombreArchivo,
         autor: autor
     };
 

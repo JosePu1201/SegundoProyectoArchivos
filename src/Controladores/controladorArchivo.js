@@ -111,7 +111,7 @@ const cambiarContenido = async (req, res) => {
             }
         });
 
-        res.json(cambiarContenido);
+        res.json(contenidnuevo);
     } catch (errro) {
         res.status(500).body({ mensaje: 'error al actualizar el contenido' });
     }
@@ -123,7 +123,34 @@ const obtenerArchivosEnPapelera = async (req,res) =>{
     res.json(archivosEncontrados);
 };
 const moverDirectorio = async (req,res)=>{
-    
+    const nuevoPath = req.body.nuevoPath;
+    const pathAntiguo = req.body.pathAntiguo;
+    const autor = req.body.autor;
+    const nombreArchivo = req.body.nombreArchivo;
+
+    const existeEnDirectorio = await archivo.findOne({
+        nombre: nombreArchivo,
+        pathPadre: nuevoPath,
+        autor: autor
+    });
+
+    if(existeEnDirectorio !== null){
+        res.json({message: "Error! hay un archivo con el mismo nombre en el directorio al que quieres mover"});
+    }else{
+        const actualizarDirectorio = await archivo.updateOne({
+            nombre: nombreArchivo,
+            pathPadre: pathAntiguo,
+            autor: autor
+        },
+        {
+            $set:{
+               pathPadre: nuevoPath 
+            }
+        });
+
+        res.json({message: "Archivo movido con exito"});
+    }
+
 }
 module.exports = {
     agregarArchivo,
@@ -132,5 +159,6 @@ module.exports = {
     moverAPapelera,
     obtenerArchivoPorPathAutorNombre,
     cambiarContenido,
-    obtenerArchivosEnPapelera
+    obtenerArchivosEnPapelera,
+    moverDirectorio
 }
