@@ -7,6 +7,19 @@ const urlGeneral = `http://localhost:4000/api`;
 let path = null;
 //llama a la configuracion inicial
 configInicial();
+//Conficuracion al principio de la ejecucion
+async function configInicial() {
+    //document.getElementById("NombreUsuario").textContent = `Administrador: ${nombre}`;
+    mostrarCarpetas();
+    const currentUrl = window.location.href;
+    const matches = currentUrl.match(/\/([^\/?#]+)[^\/]*$/);
+    const sourceHTML = matches ? matches[1] : 'Desconocido';
+    if (sourceHTML === "vistaAdmin.html") {
+        document.getElementById("NombreUsuario").textContent = `Administrador: ${nombre}`;
+    } else {
+        document.getElementById("NombreUsuario").textContent = `Empleado: ${nombre}`;
+    }
+}
 //Cerrar Edicion y acciones
 function cerrarEditar() {
     document.getElementById("editarArchivo").style.display = "none";
@@ -54,6 +67,7 @@ document.getElementById("passwordForm").addEventListener("submit", function (eve
     document.getElementById("confirmPassword").value = "";
     localStorage.removeItem('token')
 });
+//valida si hay caracteres especiales
 function validarTexto(texto) {
     const caracteresEspeciales = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
     if (texto && typeof texto === 'string' && texto.trim() !== '') {
@@ -66,38 +80,34 @@ function validarTexto(texto) {
         return false;
     }
 }
+//Crear una carpeta nueva
 function agregarCarpeta(event) {
     event.preventDefault();
     const nombreCarpeta = document.getElementById('nombreCarpeta').value;
     console.log(nombreCarpeta);
     if (validarTexto(nombreCarpeta)) {
         nuevaCarpeta(nombreCarpeta);
+        cerrarFormularioCarpeta();
     } else {
         alert("El nombre no es valida\nNo debe de tener caracteres especiales ni tener espacios vacios");
     }
 }
-
+//validacion para crear carpeta
 function nuevaCarpetaView() {
     if (path !== null && path !== '/compartido') {
-        document.getElementById("formularioCarpeta").style.display = "block";
+        document.getElementById('formularioCarpeta').style.display = "block";
     } else {
-        alert("No puedes crear una carpeta en este directorio");
+        alert('No puedes crear una carpeta en este directorio');
     }
 
 }
-
 function cerrarFormularioCarpeta() {
-    document.getElementById("formularioCarpeta").style.display = "none";
+    document.getElementById('formularioCarpeta').style.display = "none";
 }
 
-document.getElementById("nuevaCarpetaForm").addEventListener("submit", function (event) {
+document.getElementById('nuevaCarpetaForm').addEventListener("submit", function (event) {
     event.preventDefault();
-
     const nombreCarpeta = document.getElementById("nombreCarpeta").value;
-
-    // Aquí puedes enviar el nombre de la carpeta a tu API para crearla
-    // Por ejemplo, utilizando fetch o XMLHttpRequest
-
     document.getElementById("nombreCarpeta").value = "";
     document.getElementById("formularioCarpeta").style.display = "none";
 });
@@ -140,22 +150,32 @@ document.getElementById("txtForm").addEventListener("submit", async function (ev
 
     closeModal();
 });
-//funcion que configura todo al inicio
-async function configInicial() {
-    //document.getElementById("NombreUsuario").textContent = `Administrador: ${nombre}`;
-    mostrarCarpetas();
-    const currentUrl = window.location.href;
-    const matches = currentUrl.match(/\/([^\/?#]+)[^\/]*$/);
-    const sourceHTML = matches ? matches[1] : 'Desconocido';
-    if (sourceHTML === "vistaAdmin.html") {
-        document.getElementById("NombreUsuario").textContent = `Administrador: ${nombre}`;
-    } else {
-        document.getElementById("NombreUsuario").textContent = `Empleado: ${nombre}`;
-    }
 
-
-    // Resto del código en admin.js
+//funciones parta compartir
+function funcionCompartir(nombreArchivo) {
+    document.getElementById('formularioCompartir').style.display = "block";
+    document.getElementById('nombreArchivoCompartir').textContent = nombreArchivo;
 }
+function cerrarCompartir() {
+    document.getElementById('formularioCompartir').style.display = "none";
+    document.getElementById('nombreCompartir').value = "";
+}
+
+function compartirArchivo() {
+    const nombreArchivo = document.getElementById('nombreArchivoCompartir').textContent;
+    const usuarioCompartir = document.getElementById('nombreCompartir').value;
+    if (usuarioCompartir !== nombre) {
+        compartir(nombreArchivo, usuarioCompartir);
+        cerrarCompartir();
+    } else {
+        alert("No te puedes compartir tu propio archivo");
+    }
+}
+document.getElementById('compartirForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    compartirArchivo();
+});
+
 //valida que tipo para decidir accion
 async function validarTipo(tipo, nombreCarpeta) {
 
@@ -166,7 +186,7 @@ async function validarTipo(tipo, nombreCarpeta) {
         mostrarContenidoArchivo(nombreCarpeta, "mostrar");
     }
 }
-
+//agregar a las filas los tipo archivo
 function agregarFilaArchivo(nombreArchivo, tipo, fecha, fechaMod) {
     const tbody = document.getElementById('cuerpoTabla');
     const fila = document.createElement('tr');
@@ -243,34 +263,9 @@ function agregarFilaArchivo(nombreArchivo, tipo, fecha, fechaMod) {
     tbody.appendChild(fila);
     localStorage.removeItem('token')
 }
-//funciones parta compartir
-function funcionCompartir(nombreArchivo) {
-    document.getElementById('formularioCompartir').style.display = "block";
-    document.getElementById('nombreArchivoCompartir').textContent = nombreArchivo;
-}
-function cerrarCompartir() {
-    document.getElementById('formularioCompartir').style.display = "none";
-    document.getElementById('nombreCompartir').value = "";
-}
-
-function compartirArchivo() {
-    const nombreArchivo = document.getElementById('nombreArchivoCompartir').textContent;
-    const usuarioCompartir = document.getElementById('nombreCompartir').value;
-    if (usuarioCompartir !== nombre) {
-        compartir(nombreArchivo, usuarioCompartir);
-    } else {
-        alert("No te puedes compartir tu propio archivo");
-    }
-
-    console.log(nombreArchivo, ' ', usuarioCompartir);
-}
-document.getElementById('compartirForm').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevents the default form submission
-    compartirArchivo();
-});
 
 
-//agrega filas a una tabla
+//agrega filas a una tabla de tipo carpetas
 function agregarFilaCarpeta(nombre, tipo, fecha, fechaMod) {
     const tbody = document.getElementById('cuerpoTabla');
     const fila = document.createElement('tr');
@@ -351,9 +346,15 @@ function agregarFilaCarpeta(nombre, tipo, fecha, fechaMod) {
     tbody.appendChild(fila);
     localStorage.removeItem('token')
 }
+async function limpiarTabla() {
+    const cuerpoTabla = document.getElementById('cuerpoTabla');
+    cuerpoTabla.innerHTML = ''; // Eliminar todo el contenido del cuerpo de la tabla
+}
+/**fin acciones tabla ----------------------------------------- */
 function editarArchivo(nombreArchivo) {
     mostrarContenidoArchivo(nombreArchivo, "editar")
 }
+//movimiento de las vistas
 function RegresarVista() {
 
     if (path === null) {
@@ -376,14 +377,7 @@ function RegresarVista() {
     }
     mostrarCarpetas();
 }
-function accionCerrar() {
-    localStorage.removeItem('token')
-    window.location.href = "login.html";
-}
-async function limpiarTabla() {
-    const cuerpoTabla = document.getElementById('cuerpoTabla');
-    cuerpoTabla.innerHTML = ''; // Eliminar todo el contenido del cuerpo de la tabla
-}
+
 
 async function mostrarCarpetas() {
     limpiarTabla();
@@ -405,6 +399,9 @@ async function mostrarCarpetas() {
     }
 
 }
+/**funciones compartido
+ * -----------------------------------------------------------------------------
+ */
 async function obtenerArchivosCompartido() {
     const cuerpoTabla = document.getElementById('cuerpoCompartido');
     cuerpoTabla.innerHTML = '';
@@ -573,6 +570,7 @@ async function actualizar(nuevaContra) {
             console.error('error', error);
         })
 }
+//obtener las carpetas
 async function obtenerCarpetas() {
     const url = `${urlGeneral}/consultaDirectorioPathAutor?autor=${nombre}&path=${path}`;
     try {
@@ -586,6 +584,7 @@ async function obtenerCarpetas() {
 
     }
 }
+//obtiene el path de una carpeta
 async function obtenerPathCarpeta(nombreCarpeta) {
     const url1 = `${urlGeneral}/consultanombreAutor?nombreCarpeta=${nombreCarpeta}&autor=${nombre}&path=${path}`;
     try {
@@ -600,7 +599,7 @@ async function obtenerPathCarpeta(nombreCarpeta) {
 
     }
 }
-
+//obtiene archivos
 async function obtenerArchivos() {
     const url2 = `${urlGeneral}/consultaArchivoPathAutor?autor=${nombre}&path=${path}`;
     try {
@@ -615,6 +614,7 @@ async function obtenerArchivos() {
         console.log('Ocurrio un erro')
     }
 }
+// mueve archivos a la papelera
 async function moverPapelera(nombreArchivoEliminar) {
     const url = `${urlGeneral}/moverPapelera`;
     const data = {
@@ -639,6 +639,7 @@ async function moverPapelera(nombreArchivoEliminar) {
     }
     mostrarCarpetas();
 }
+//Muestra el contenido de un archivo
 async function mostrarContenidoArchivo(nombreArchivo, accion) {
     const url2 = `${urlGeneral}/mostrarContenido?path=${path}&autor=${nombre}&nombre=${nombreArchivo}`
     try {
@@ -666,6 +667,7 @@ async function mostrarContenidoArchivo(nombreArchivo, accion) {
         console.log('Ocurrio un erro')
     }
 }
+//Cambia para editar
 async function cambioEdicio(nombreArchivo, nuevoContenido) {
     const url = `${urlGeneral}/actualizarContenido`
     const data = {
@@ -690,6 +692,7 @@ async function cambioEdicio(nombreArchivo, nuevoContenido) {
     await mostrarCarpetas();
 
 }
+//Crear nueva carpetas
 async function nuevaCarpeta(nuevoNombre) {
     const pathIn = path + '/' + nuevoNombre;
     console.log(pathIn);
@@ -796,4 +799,8 @@ function procesarInfo(data) {
             agregarFilaCarpeta(nombre, tipo, fechaCrear, null);
         }
     });
+}
+function accionCerrar() {
+    localStorage.removeItem('token')
+    window.location.href = "login.html";
 }
