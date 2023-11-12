@@ -27,10 +27,11 @@ async function validarUsuario(evento) {
 }
 
 function procesarData(data) {
+    
     if (data.rol === 'Empleado') {
-        window.location.href = `vistaEmpleado.html?nombre=${data.usuario}`; // Redirigir a la página para empleados
+        window.location.href = `vistaEmpleado.html?nombre=${data._id}`; // Redirigir a la página para empleados
     } else if (data.rol === 'Admin') {
-        window.location.href = `vistaAdmin.html?nombre=${data.usuario}`; // Redirigir a la página para administradores
+        window.location.href = `vistaAdmin.html?nombre=${data._id}`; // Redirigir a la página para administradores
     } else {
         console.log('Rol desconocido');
         // Manejar un rol desconocido o mostrar un mensaje al usuario

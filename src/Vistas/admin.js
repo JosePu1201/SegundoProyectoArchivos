@@ -2,14 +2,27 @@
 
 
 const parametro = new URLSearchParams(window.location.search)
-const nombre = parametro.get('nombre');
+const id = parametro.get('nombre');
+let nombre;
+async function buscarUsuario(idE){
+    let salida = null;
+    const url = `${urlGeneral}/obtenerUsuarioId?id=${idE}`;
+    const res = await fetch(url);
+    if(!res.ok){
+
+    }else{
+        const resultado = await res.json();
+        salida = resultado.usuario;
+    }
+    return salida;
+}
 const urlGeneral = `http://localhost:4000/api`;
 let path = null;
 //llama a la configuracion inicial
 configInicial();
 //Conficuracion al principio de la ejecucion
 async function configInicial() {
-    //document.getElementById("NombreUsuario").textContent = `Administrador: ${nombre}`;
+    nombre = await buscarUsuario(id);
     mostrarCarpetas();
     const currentUrl = window.location.href;
     const matches = currentUrl.match(/\/([^\/?#]+)[^\/]*$/);

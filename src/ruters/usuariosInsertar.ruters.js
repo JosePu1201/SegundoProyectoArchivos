@@ -7,8 +7,7 @@ const ruter = express.Router();
 ruter.post('/agregarUsuario',controladorUsuario.agregarUsuario);
 //obtener un usuario
 ruter.get('/obtenerUsurio', controladorUsuario.obtenerUsuario);
-
+ruter.get('/obtenerUsuarioId',controladorUsuario.obtenerUsuarioID);
 ruter.put('/actualizarContra',controladorUsuario.actualizarUsaurio);
-
 
 module.exports = ruter;

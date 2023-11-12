@@ -58,6 +58,26 @@ const obtenerUsuario = async (req, res) => {
     }
 }
 
+const obtenerUsuarioID = async (req, res) => {
+    try {
+        const id = req.query.id;
+        const buscar = await usuario.findById({
+            _id: id
+        });
+
+        // Manejar el caso cuando el usuario no se encuentra
+        if (!buscar) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        // Si se encuentra el usuario, puedes enviar los datos del usuario como respuesta
+        res.json(buscar);
+    } catch (error) {
+        // Manejar otros posibles errores, por ejemplo, problemas de conexión a la base de datos
+        console.error(error);
+        res.status(500).json({ error: 'Error Interno del Servidor' });
+    }
+};
 
 const actualizarUsaurio = async (req, res) => {
     try {
@@ -84,5 +104,6 @@ const actualizarUsaurio = async (req, res) => {
 module.exports = {
     agregarUsuario,
     obtenerUsuario,
-    actualizarUsaurio
+    actualizarUsaurio,
+    obtenerUsuarioID
 }
